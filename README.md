@@ -261,9 +261,10 @@ go test -run TestLive -v ./...
 ```
 
 They skip without `PAYREXX_LIVE_TEST`, so `go test ./...` stays offline, and CI
-runs them from a separate scheduled workflow rather than on pull requests. They
-create gateways — hosted checkout pages, no money moves, nothing is charged — and
-delete them again in a `t.Cleanup`. Nothing else is written.
+runs them from [`upstream-watch.yml`](.github/workflows/upstream-watch.yml)
+rather than on pull requests. They create gateways — hosted checkout pages, no
+money moves, nothing is charged — and delete them again in a `t.Cleanup`. Nothing
+else is written.
 
 Three defects were found this way and are fixed in the code above:
 
@@ -279,6 +280,52 @@ Three defects were found this way and are fixed in the code above:
 
 `Gateway.language` and `Gateway.requestId` are returned but documented nowhere;
 they are in the model with that noted.
+
+## CI
+
+The split matters, so it is worth stating: **nothing that runs on a pull request
+talks to Payrexx.** A Payrexx outage or a documentation edit can never block a
+merge.
+
+[`ci.yml`](.github/workflows/ci.yml) — on every push and PR, entirely offline:
+gofmt, vet, build and `go test -race` on Go 1.23 and stable, plus a check that
+`./gen.sh` against the committed `openapi.json` reproduces the committed client
+byte for byte. That last one is what stops a hand-edit to a generated file from
+surviving review and then silently vanishing at the next regeneration.
+
+[`upstream-watch.yml`](.github/workflows/upstream-watch.yml) — Mondays 06:00 UTC
+and on demand. Rebuilds the spec from developers.payrexx.com and diffs it against
+the committed one, then runs the live tests. Both steps run even if the first
+fails, and the job goes red if either does. This is the half that can break
+without anyone committing anything: every correction in `build_spec.py` is a
+claim about an API whose published schema is already wrong in places.
+
+**On failure it opens an issue** titled *Upstream watch failed*, with the spec
+diff or the failing test output in the body, and comments on the existing issue
+rather than filing a duplicate. That indirection is deliberate — GitHub's own
+notification for a scheduled workflow reaches exactly one person ("Notifications
+for scheduled workflows are sent to the user who initially created the workflow",
+reassigned to whoever last edits the `cron:` line), at whatever address that
+account uses, only if their Actions notification preference is on. An issue is
+visible to everyone with repository access and survives people leaving.
+
+Two repository secrets are required, or the live step fails loudly rather than
+silently skipping: `PAYREXX_INSTANCE` and `PAYREXX_API_SECRET`.
+
+### The keepalive commit
+
+Public repositories have their scheduled workflows *"automatically disabled when
+no repository activity has occurred in 60 days"* — and an SDK that is working
+correctly is exactly a repository with no activity, so this watch would switch
+itself off precisely while it was doing its job. Workflow runs do not count as
+activity; commits do. So after a clean run, if the last commit is more than 45
+days old, the workflow writes the date into `.github/spec-last-verified` and
+pushes it. At most one commit every seven weeks, and none at all while anyone is
+working on the repo.
+
+It needs `contents: write` and push access to the default branch. If you protect
+that branch, either exempt `github-actions[bot]` or drop the step and re-enable
+the schedule by hand when GitHub emails about it.
 
 ## License
 

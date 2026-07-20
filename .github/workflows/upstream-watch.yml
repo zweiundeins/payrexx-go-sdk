@@ -1,0 +1,150 @@
+name: Upstream watch
+
+# Everything in this repository that can be wrong without anyone touching it is
+# checked here.
+#
+# scripts/build_spec.py encodes a set of claims about an API whose published
+# schema is already known to be wrong in several places, and payrexx/auth.go and
+# webhook.go encode claims about behaviour that is documented in prose or not at
+# all. Those claims can stop holding without a single commit landing, so they are
+# rechecked on a schedule rather than on a push -- and a red run here is a real
+# signal, not flakiness to route around.
+#
+# On failure this opens (or updates) an issue, because GitHub's own notification
+# for a scheduled workflow reaches exactly one person: "Notifications for
+# scheduled workflows are sent to the user who initially created the workflow",
+# reassigned to whoever last edited the cron line. An issue is visible to
+# everyone with repository access and does not depend on one account's settings.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+
+permissions:
+  contents: write # the keepalive step pushes; see its comment
+  issues: write # to report a failure
+
+# A second run must not race the first into filing a duplicate issue.
+concurrency:
+  group: upstream-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    name: spec drift and live API
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      # Both checks run even if the first fails -- knowing that the spec drifted
+      # *and* which live calls broke is more useful than learning it one week at
+      # a time. The job is failed explicitly at the end.
+      - name: spec drift
+        id: drift
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          python3 scripts/build_spec.py -o /tmp/openapi.json | tee /tmp/build.log
+          if ! diff -u openapi.json /tmp/openapi.json > /tmp/spec.diff; then
+            {
+              echo "### Payrexx changed its published API definition"
+              echo
+              echo "Rebuilding \`openapi.json\` from developers.payrexx.com no longer"
+              echo "reproduces the committed file. Run \`./gen.sh --refresh-spec\` and"
+              echo "review the diff: an added field is routine, a changed type is not."
+              echo
+              echo '<details><summary>spec diff</summary>'
+              echo
+              echo '```diff'
+              head -c 20000 /tmp/spec.diff
+              echo '```'
+              echo
+              echo '</details>'
+              echo
+            } >> /tmp/report.md
+            exit 1
+          fi
+
+      - name: live API
+        id: live
+        continue-on-error: true
+        env:
+          PAYREXX_LIVE_TEST: '1'
+          PAYREXX_INSTANCE: ${{ secrets.PAYREXX_INSTANCE }}
+          PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
+        run: |
+          if [ -z "$PAYREXX_INSTANCE" ] || [ -z "$PAYREXX_API_SECRET" ]; then
+            echo "::error::PAYREXX_INSTANCE / PAYREXX_API_SECRET are not set as repository secrets"
+            exit 1
+          fi
+          set -o pipefail
+          if ! go test -run TestLive -v ./... 2>&1 | tee /tmp/live.log; then
+            {
+              echo "### The live Payrexx API no longer behaves as this SDK expects"
+              echo
+              echo "One of the corrections in \`scripts/build_spec.py\`, or something in"
+              echo "\`auth.go\`/\`webhook.go\`, has stopped holding. The failing test names"
+              echo "which one."
+              echo
+              echo '<details><summary>go test output</summary>'
+              echo
+              echo '```'
+              tail -c 20000 /tmp/live.log
+              echo '```'
+              echo
+              echo '</details>'
+              echo
+            } >> /tmp/report.md
+            exit 1
+          fi
+
+      - name: report
+        if: steps.drift.outcome == 'failure' || steps.live.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TITLE: 'Upstream watch failed'
+        run: |
+          echo "[Workflow run]($RUN_URL) · $(date -u +%Y-%m-%dT%H:%MZ)" >> /tmp/report.md
+
+          # Reuse the open issue if there is one: nine quiet weeks of the same
+          # drift should be one thread, not nine issues.
+          existing=$(gh issue list --state open --search "$TITLE in:title" \
+            --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file /tmp/report.md
+            echo "commented on #$existing"
+          else
+            gh issue create --title "$TITLE" --body-file /tmp/report.md
+          fi
+
+      # Public repositories have their scheduled workflows "automatically
+      # disabled when no repository activity has occurred in 60 days", and an SDK
+      # that is working correctly is exactly a repository with no activity -- so
+      # this watch would switch itself off precisely while it was doing its job.
+      # A workflow run does not count as activity; a commit does. This pushes one
+      # only once the repository is close to going stale, so it is at most one
+      # commit every seven weeks and none at all while the repo is being worked on.
+      - name: keepalive
+        if: github.event_name == 'schedule' && steps.drift.outcome == 'success' && steps.live.outcome == 'success'
+        run: |
+          age_days=$(( ( $(date -u +%s) - $(git log -1 --format=%ct) ) / 86400 ))
+          echo "last commit was $age_days days ago"
+          if [ "$age_days" -lt 45 ]; then
+            echo "repository is active; nothing to do"
+            exit 0
+          fi
+          date -u +%Y-%m-%d > .github/spec-last-verified
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .github/spec-last-verified
+          git commit -m 'chore: spec verified against upstream (keeps the schedule alive)'
+          git push
+
+      - name: fail if either check failed
+        if: steps.drift.outcome == 'failure' || steps.live.outcome == 'failure'
+        run: exit 1

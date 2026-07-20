@@ -1,5 +1,9 @@
 name: CI
 
+# Everything here is offline and deterministic. Nothing in this file talks to
+# Payrexx, so neither a Payrexx outage nor an upstream documentation change can
+# ever block a merge. Drift against the live API is watched separately, on a
+# schedule, by upstream-watch.yml.
 on:
   push:
     branches: [master, main]
@@ -39,25 +43,28 @@ jobs:
       - name: go build
         run: go build ./...
 
+      # The live tests self-skip without PAYREXX_LIVE_TEST.
       - name: go test
         run: go test -race ./...
 
-  spec:
+  generated:
     runs-on: ubuntu-latest
-    name: spec is reproducible
+    name: generated client matches the spec
     steps:
       - uses: actions/checkout@v5
 
-      # The committed openapi.json is the input to every generation, so it has to
-      # be exactly what build_spec.py produces from the committed inputs. This
-      # rebuilds it from upstream and fails on any difference — which is the
-      # signal that Payrexx changed something, not that the repo is broken.
-      # Allowed to fail: it depends on developers.payrexx.com being reachable.
-      - name: rebuild openapi.json from upstream
-        continue-on-error: true
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      # The committed client must be exactly what the committed spec and the
+      # pinned generator produce -- otherwise a hand-edit to a generated file
+      # survives review and then vanishes at the next ./gen.sh. Uses the
+      # committed openapi.json, so this stays offline.
+      - name: ./gen.sh reproduces the committed output
         run: |
-          python3 scripts/build_spec.py -o /tmp/openapi.json
-          diff -u openapi.json /tmp/openapi.json || {
-            echo "::warning::upstream spec has drifted; run ./gen.sh --refresh-spec"
+          ./gen.sh
+          if ! git diff --exit-code; then
+            echo "::error::regenerating changed tracked files -- commit the result of ./gen.sh"
             exit 1
-          }
+          fi
