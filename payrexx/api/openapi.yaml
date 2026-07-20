@@ -3866,61 +3866,9 @@ components:
         invoices:
         - invoices
         - invoices
-        preAuthorization: 0
-        reservation: 0
-        fields:
-          title:
-            active: false
-            mandatory: true
-          forename:
-            active: false
-            mandatory: true
-          surname:
-            active: false
-            mandatory: true
-          company:
-            active: false
-            mandatory: true
-          street:
-            active: false
-            mandatory: true
-          postcode:
-            active: false
-            mandatory: true
-          place:
-            active: false
-            mandatory: true
-          country:
-            active: false
-            mandatory: true
-          phone:
-            active: false
-            mandatory: true
-          email:
-            active: false
-            mandatory: true
-          date_of_birth:
-            active: false
-            mandatory: true
-            names:
-              de: ""
-              en: ""
-              fr: ""
-              it: ""
-          terms:
-            active: false
-            mandatory: true
-          privacy_policy:
-            active: false
-            mandatory: true
-          text:
-            active: false
-            mandatory: true
-            names:
-              de: ""
-              en: ""
-              fr: ""
-              it: ""
+        preAuthorization: true
+        reservation: true
+        fields: ""
         psp:
         - psp
         - psp
@@ -3933,6 +3881,8 @@ components:
         sku: P01122000
         createdAt: 1475578052
         applicationFee: 0
+        language: de
+        requestId: 35517679
       properties:
         id:
           default: 0
@@ -3956,15 +3906,20 @@ components:
             type: string
           type: array
         preAuthorization:
-          default: 0
-          example: 0
-          type: integer
+          description: "Corrected against the live API: documented as an integer;\
+            \ POST /Gateway/ returns false, and the request schema for the same field\
+            \ is already a boolean."
+          type: boolean
         reservation:
-          default: 0
-          example: 0
-          type: integer
+          description: "Corrected against the live API: documented as an integer,\
+            \ but it is preAuthorization's twin and the request schema types it as\
+            \ a boolean."
+          type: boolean
         fields:
-          $ref: "#/components/schemas/Gateway_fields"
+          description: "Free-form: an object of per-field settings, or [] when none\
+            \ are set. Corrected against the live API: documented as an object; PHP\
+            \ serializes the empty case as [], so a real response is an object or\
+            \ an empty array depending on the gateway."
         psp:
           items:
             description: TODO default missing array inner type to string
@@ -3996,6 +3951,16 @@ components:
         applicationFee:
           default: 0
           example: 0
+          type: integer
+        language:
+          description: "Corrected against the live API: returned by POST and GET /Gateway/\
+            \ but absent from both pages."
+          example: de
+          type: string
+        requestId:
+          description: "Corrected against the live API: returned by POST /Gateway/\
+            \ but absent from the page."
+          example: 35517679
           type: integer
       type: object
     Invoice:
@@ -4234,68 +4199,68 @@ components:
         api: true
         fields:
           title:
-            active: false
+            active: true
             mandatory: true
           forename:
-            active: false
+            active: true
             mandatory: true
           surname:
-            active: false
+            active: true
             mandatory: true
           company:
-            active: false
+            active: true
             mandatory: true
           street:
-            active: false
+            active: true
             mandatory: true
           postcode:
-            active: false
+            active: true
             mandatory: true
           place:
-            active: false
+            active: true
             mandatory: true
           country:
-            active: false
+            active: true
             mandatory: true
           phone:
-            active: false
+            active: true
             mandatory: true
           email:
-            active: false
+            active: true
             mandatory: true
           date_of_birth:
-            active: false
+            active: true
             mandatory: true
           terms:
-            active: false
+            active: true
             mandatory: true
           privacy_policy:
-            active: false
+            active: true
             mandatory: true
           custom_field_1:
-            active: false
+            active: true
             mandatory: true
             names:
-              de: ""
-              en: ""
-              fr: ""
-              it: ""
+              de: This is a field
+              en: This is a field
+              fr: This is a field
+              it: This is a field
           custom_field_2:
-            active: false
+            active: true
             mandatory: true
             names:
-              de: ""
-              en: ""
-              fr: ""
-              it: ""
+              de: This is a field
+              en: This is a field
+              fr: This is a field
+              it: This is a field
           custom_field_3:
-            active: false
+            active: true
             mandatory: true
             names:
-              de: ""
-              en: ""
-              fr: ""
-              it: ""
+              de: This is a field
+              en: This is a field
+              fr: This is a field
+              it: This is a field
         psp: 1
         pm:
         - pm
@@ -5911,61 +5876,9 @@ components:
           invoices:
           - invoices
           - invoices
-          preAuthorization: 0
-          reservation: 0
-          fields:
-            title:
-              active: false
-              mandatory: true
-            forename:
-              active: false
-              mandatory: true
-            surname:
-              active: false
-              mandatory: true
-            company:
-              active: false
-              mandatory: true
-            street:
-              active: false
-              mandatory: true
-            postcode:
-              active: false
-              mandatory: true
-            place:
-              active: false
-              mandatory: true
-            country:
-              active: false
-              mandatory: true
-            phone:
-              active: false
-              mandatory: true
-            email:
-              active: false
-              mandatory: true
-            date_of_birth:
-              active: false
-              mandatory: true
-              names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
-            terms:
-              active: false
-              mandatory: true
-            privacy_policy:
-              active: false
-              mandatory: true
-            text:
-              active: false
-              mandatory: true
-              names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+          preAuthorization: true
+          reservation: true
+          fields: ""
           psp:
           - psp
           - psp
@@ -5978,6 +5891,8 @@ components:
           sku: P01122000
           createdAt: 1475578052
           applicationFee: 0
+          language: de
+          requestId: 35517679
         - id: 1
           status: waiting
           hash: db8c618c87dc91f100292f6ffd9c5044
@@ -5986,61 +5901,9 @@ components:
           invoices:
           - invoices
           - invoices
-          preAuthorization: 0
-          reservation: 0
-          fields:
-            title:
-              active: false
-              mandatory: true
-            forename:
-              active: false
-              mandatory: true
-            surname:
-              active: false
-              mandatory: true
-            company:
-              active: false
-              mandatory: true
-            street:
-              active: false
-              mandatory: true
-            postcode:
-              active: false
-              mandatory: true
-            place:
-              active: false
-              mandatory: true
-            country:
-              active: false
-              mandatory: true
-            phone:
-              active: false
-              mandatory: true
-            email:
-              active: false
-              mandatory: true
-            date_of_birth:
-              active: false
-              mandatory: true
-              names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
-            terms:
-              active: false
-              mandatory: true
-            privacy_policy:
-              active: false
-              mandatory: true
-            text:
-              active: false
-              mandatory: true
-              names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+          preAuthorization: true
+          reservation: true
+          fields: ""
           psp:
           - psp
           - psp
@@ -6053,6 +5916,8 @@ components:
           sku: P01122000
           createdAt: 1475578052
           applicationFee: 0
+          language: de
+          requestId: 35517679
       properties:
         status:
           example: success
@@ -6188,68 +6053,68 @@ components:
           api: true
           fields:
             title:
-              active: false
+              active: true
               mandatory: true
             forename:
-              active: false
+              active: true
               mandatory: true
             surname:
-              active: false
+              active: true
               mandatory: true
             company:
-              active: false
+              active: true
               mandatory: true
             street:
-              active: false
+              active: true
               mandatory: true
             postcode:
-              active: false
+              active: true
               mandatory: true
             place:
-              active: false
+              active: true
               mandatory: true
             country:
-              active: false
+              active: true
               mandatory: true
             phone:
-              active: false
+              active: true
               mandatory: true
             email:
-              active: false
+              active: true
               mandatory: true
             date_of_birth:
-              active: false
+              active: true
               mandatory: true
             terms:
-              active: false
+              active: true
               mandatory: true
             privacy_policy:
-              active: false
+              active: true
               mandatory: true
             custom_field_1:
-              active: false
+              active: true
               mandatory: true
               names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+                de: This is a field
+                en: This is a field
+                fr: This is a field
+                it: This is a field
             custom_field_2:
-              active: false
+              active: true
               mandatory: true
               names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+                de: This is a field
+                en: This is a field
+                fr: This is a field
+                it: This is a field
             custom_field_3:
-              active: false
+              active: true
               mandatory: true
               names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+                de: This is a field
+                en: This is a field
+                fr: This is a field
+                it: This is a field
           psp: 1
           pm:
           - pm
@@ -6278,68 +6143,68 @@ components:
           api: true
           fields:
             title:
-              active: false
+              active: true
               mandatory: true
             forename:
-              active: false
+              active: true
               mandatory: true
             surname:
-              active: false
+              active: true
               mandatory: true
             company:
-              active: false
+              active: true
               mandatory: true
             street:
-              active: false
+              active: true
               mandatory: true
             postcode:
-              active: false
+              active: true
               mandatory: true
             place:
-              active: false
+              active: true
               mandatory: true
             country:
-              active: false
+              active: true
               mandatory: true
             phone:
-              active: false
+              active: true
               mandatory: true
             email:
-              active: false
+              active: true
               mandatory: true
             date_of_birth:
-              active: false
+              active: true
               mandatory: true
             terms:
-              active: false
+              active: true
               mandatory: true
             privacy_policy:
-              active: false
+              active: true
               mandatory: true
             custom_field_1:
-              active: false
+              active: true
               mandatory: true
               names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+                de: This is a field
+                en: This is a field
+                fr: This is a field
+                it: This is a field
             custom_field_2:
-              active: false
+              active: true
               mandatory: true
               names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+                de: This is a field
+                en: This is a field
+                fr: This is a field
+                it: This is a field
             custom_field_3:
-              active: false
+              active: true
               mandatory: true
               names:
-                de: ""
-                en: ""
-                fr: ""
-                it: ""
+                de: This is a field
+                en: This is a field
+                fr: This is a field
+                it: This is a field
           psp: 1
           pm:
           - pm
@@ -7129,145 +6994,6 @@ components:
           example: Invalid value passed for parameter 'currency'
           type: string
       type: object
-    Gateway_fields_title:
-      example:
-        active: false
-        mandatory: true
-      properties:
-        active:
-          default: true
-          example: false
-          type: boolean
-        mandatory:
-          default: true
-          example: true
-          type: boolean
-      type: object
-    Gateway_fields_date_of_birth_names:
-      example:
-        de: ""
-        en: ""
-        fr: ""
-        it: ""
-      properties:
-        de:
-          example: ""
-          type: string
-        en:
-          example: ""
-          type: string
-        fr:
-          example: ""
-          type: string
-        it:
-          example: ""
-          type: string
-      type: object
-    Gateway_fields_date_of_birth:
-      example:
-        active: false
-        mandatory: true
-        names:
-          de: ""
-          en: ""
-          fr: ""
-          it: ""
-      properties:
-        active:
-          default: true
-          example: false
-          type: boolean
-        mandatory:
-          default: true
-          example: true
-          type: boolean
-        names:
-          $ref: "#/components/schemas/Gateway_fields_date_of_birth_names"
-      type: object
-    Gateway_fields:
-      example:
-        title:
-          active: false
-          mandatory: true
-        forename:
-          active: false
-          mandatory: true
-        surname:
-          active: false
-          mandatory: true
-        company:
-          active: false
-          mandatory: true
-        street:
-          active: false
-          mandatory: true
-        postcode:
-          active: false
-          mandatory: true
-        place:
-          active: false
-          mandatory: true
-        country:
-          active: false
-          mandatory: true
-        phone:
-          active: false
-          mandatory: true
-        email:
-          active: false
-          mandatory: true
-        date_of_birth:
-          active: false
-          mandatory: true
-          names:
-            de: ""
-            en: ""
-            fr: ""
-            it: ""
-        terms:
-          active: false
-          mandatory: true
-        privacy_policy:
-          active: false
-          mandatory: true
-        text:
-          active: false
-          mandatory: true
-          names:
-            de: ""
-            en: ""
-            fr: ""
-            it: ""
-      properties:
-        title:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        forename:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        surname:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        company:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        street:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        postcode:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        place:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        country:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        phone:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        email:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        date_of_birth:
-          $ref: "#/components/schemas/Gateway_fields_date_of_birth"
-        terms:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        privacy_policy:
-          $ref: "#/components/schemas/Gateway_fields_title"
-        text:
-          $ref: "#/components/schemas/Gateway_fields_date_of_birth"
-      type: object
     Invoice_recipient:
       example:
         company: Bachziegel AG
@@ -7470,104 +7196,159 @@ components:
           example: "287133000000000000000001950"
           type: string
       type: object
+    Paylink_fields_title:
+      example:
+        active: true
+        mandatory: true
+      properties:
+        active:
+          default: true
+          example: true
+          type: boolean
+        mandatory:
+          default: true
+          example: true
+          type: boolean
+      type: object
+    Paylink_fields_custom_field_1_names:
+      example:
+        de: This is a field
+        en: This is a field
+        fr: This is a field
+        it: This is a field
+      properties:
+        de:
+          example: This is a field
+          type: string
+        en:
+          example: This is a field
+          type: string
+        fr:
+          example: This is a field
+          type: string
+        it:
+          example: This is a field
+          type: string
+      type: object
+    Paylink_fields_custom_field_1:
+      example:
+        active: true
+        mandatory: true
+        names:
+          de: This is a field
+          en: This is a field
+          fr: This is a field
+          it: This is a field
+      properties:
+        active:
+          default: true
+          example: true
+          type: boolean
+        mandatory:
+          default: true
+          example: true
+          type: boolean
+        names:
+          $ref: "#/components/schemas/Paylink_fields_custom_field_1_names"
+      type: object
     Paylink_fields:
       example:
         title:
-          active: false
+          active: true
           mandatory: true
         forename:
-          active: false
+          active: true
           mandatory: true
         surname:
-          active: false
+          active: true
           mandatory: true
         company:
-          active: false
+          active: true
           mandatory: true
         street:
-          active: false
+          active: true
           mandatory: true
         postcode:
-          active: false
+          active: true
           mandatory: true
         place:
-          active: false
+          active: true
           mandatory: true
         country:
-          active: false
+          active: true
           mandatory: true
         phone:
-          active: false
+          active: true
           mandatory: true
         email:
-          active: false
+          active: true
           mandatory: true
         date_of_birth:
-          active: false
+          active: true
           mandatory: true
         terms:
-          active: false
+          active: true
           mandatory: true
         privacy_policy:
-          active: false
+          active: true
           mandatory: true
         custom_field_1:
-          active: false
+          active: true
           mandatory: true
           names:
-            de: ""
-            en: ""
-            fr: ""
-            it: ""
+            de: This is a field
+            en: This is a field
+            fr: This is a field
+            it: This is a field
         custom_field_2:
-          active: false
+          active: true
           mandatory: true
           names:
-            de: ""
-            en: ""
-            fr: ""
-            it: ""
+            de: This is a field
+            en: This is a field
+            fr: This is a field
+            it: This is a field
         custom_field_3:
-          active: false
+          active: true
           mandatory: true
           names:
-            de: ""
-            en: ""
-            fr: ""
-            it: ""
+            de: This is a field
+            en: This is a field
+            fr: This is a field
+            it: This is a field
       properties:
         title:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         forename:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         surname:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         company:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         street:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         postcode:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         place:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         country:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         phone:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         email:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         date_of_birth:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         terms:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         privacy_policy:
-          $ref: "#/components/schemas/Gateway_fields_title"
+          $ref: "#/components/schemas/Paylink_fields_title"
         custom_field_1:
-          $ref: "#/components/schemas/Gateway_fields_date_of_birth"
+          $ref: "#/components/schemas/Paylink_fields_custom_field_1"
         custom_field_2:
-          $ref: "#/components/schemas/Gateway_fields_date_of_birth"
+          $ref: "#/components/schemas/Paylink_fields_custom_field_1"
         custom_field_3:
-          $ref: "#/components/schemas/Gateway_fields_date_of_birth"
+          $ref: "#/components/schemas/Paylink_fields_custom_field_1"
       type: object
     Payout_destination:
       example:

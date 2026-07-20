@@ -1,4 +1,4 @@
-# GatewayFieldsDateOfBirthNames
+# PaylinkFieldsCustomField1Names
 
 ## Properties
 
@@ -11,120 +11,120 @@ Name | Type | Description | Notes
 
 ## Methods
 
-### NewGatewayFieldsDateOfBirthNames
+### NewPaylinkFieldsCustomField1Names
 
-`func NewGatewayFieldsDateOfBirthNames() *GatewayFieldsDateOfBirthNames`
+`func NewPaylinkFieldsCustomField1Names() *PaylinkFieldsCustomField1Names`
 
-NewGatewayFieldsDateOfBirthNames instantiates a new GatewayFieldsDateOfBirthNames object
+NewPaylinkFieldsCustomField1Names instantiates a new PaylinkFieldsCustomField1Names object
 This constructor will assign default values to properties that have it defined,
 and makes sure properties required by API are set, but the set of arguments
 will change when the set of required properties is changed
 
-### NewGatewayFieldsDateOfBirthNamesWithDefaults
+### NewPaylinkFieldsCustomField1NamesWithDefaults
 
-`func NewGatewayFieldsDateOfBirthNamesWithDefaults() *GatewayFieldsDateOfBirthNames`
+`func NewPaylinkFieldsCustomField1NamesWithDefaults() *PaylinkFieldsCustomField1Names`
 
-NewGatewayFieldsDateOfBirthNamesWithDefaults instantiates a new GatewayFieldsDateOfBirthNames object
+NewPaylinkFieldsCustomField1NamesWithDefaults instantiates a new PaylinkFieldsCustomField1Names object
 This constructor will only assign default values to properties that have it defined,
 but it doesn't guarantee that properties required by API are set
 
 ### GetDe
 
-`func (o *GatewayFieldsDateOfBirthNames) GetDe() string`
+`func (o *PaylinkFieldsCustomField1Names) GetDe() string`
 
 GetDe returns the De field if non-nil, zero value otherwise.
 
 ### GetDeOk
 
-`func (o *GatewayFieldsDateOfBirthNames) GetDeOk() (*string, bool)`
+`func (o *PaylinkFieldsCustomField1Names) GetDeOk() (*string, bool)`
 
 GetDeOk returns a tuple with the De field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetDe
 
-`func (o *GatewayFieldsDateOfBirthNames) SetDe(v string)`
+`func (o *PaylinkFieldsCustomField1Names) SetDe(v string)`
 
 SetDe sets De field to given value.
 
 ### HasDe
 
-`func (o *GatewayFieldsDateOfBirthNames) HasDe() bool`
+`func (o *PaylinkFieldsCustomField1Names) HasDe() bool`
 
 HasDe returns a boolean if a field has been set.
 
 ### GetEn
 
-`func (o *GatewayFieldsDateOfBirthNames) GetEn() string`
+`func (o *PaylinkFieldsCustomField1Names) GetEn() string`
 
 GetEn returns the En field if non-nil, zero value otherwise.
 
 ### GetEnOk
 
-`func (o *GatewayFieldsDateOfBirthNames) GetEnOk() (*string, bool)`
+`func (o *PaylinkFieldsCustomField1Names) GetEnOk() (*string, bool)`
 
 GetEnOk returns a tuple with the En field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetEn
 
-`func (o *GatewayFieldsDateOfBirthNames) SetEn(v string)`
+`func (o *PaylinkFieldsCustomField1Names) SetEn(v string)`
 
 SetEn sets En field to given value.
 
 ### HasEn
 
-`func (o *GatewayFieldsDateOfBirthNames) HasEn() bool`
+`func (o *PaylinkFieldsCustomField1Names) HasEn() bool`
 
 HasEn returns a boolean if a field has been set.
 
 ### GetFr
 
-`func (o *GatewayFieldsDateOfBirthNames) GetFr() string`
+`func (o *PaylinkFieldsCustomField1Names) GetFr() string`
 
 GetFr returns the Fr field if non-nil, zero value otherwise.
 
 ### GetFrOk
 
-`func (o *GatewayFieldsDateOfBirthNames) GetFrOk() (*string, bool)`
+`func (o *PaylinkFieldsCustomField1Names) GetFrOk() (*string, bool)`
 
 GetFrOk returns a tuple with the Fr field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFr
 
-`func (o *GatewayFieldsDateOfBirthNames) SetFr(v string)`
+`func (o *PaylinkFieldsCustomField1Names) SetFr(v string)`
 
 SetFr sets Fr field to given value.
 
 ### HasFr
 
-`func (o *GatewayFieldsDateOfBirthNames) HasFr() bool`
+`func (o *PaylinkFieldsCustomField1Names) HasFr() bool`
 
 HasFr returns a boolean if a field has been set.
 
 ### GetIt
 
-`func (o *GatewayFieldsDateOfBirthNames) GetIt() string`
+`func (o *PaylinkFieldsCustomField1Names) GetIt() string`
 
 GetIt returns the It field if non-nil, zero value otherwise.
 
 ### GetItOk
 
-`func (o *GatewayFieldsDateOfBirthNames) GetItOk() (*string, bool)`
+`func (o *PaylinkFieldsCustomField1Names) GetItOk() (*string, bool)`
 
 GetItOk returns a tuple with the It field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetIt
 
-`func (o *GatewayFieldsDateOfBirthNames) SetIt(v string)`
+`func (o *PaylinkFieldsCustomField1Names) SetIt(v string)`
 
 SetIt sets It field to given value.
 
 ### HasIt
 
-`func (o *GatewayFieldsDateOfBirthNames) HasIt() bool`
+`func (o *PaylinkFieldsCustomField1Names) HasIt() bool`
 
 HasIt returns a boolean if a field has been set.
 

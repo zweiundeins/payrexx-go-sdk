@@ -112,10 +112,9 @@ set — putting it in one place is the only way both stay true.
 **On `AuthSignature`:** the signed string is the request's parameters rendered as
 PHP's `http_build_query` renders them, which differs from Go's `url.Values` in
 several characters. That encoding is pinned by known-answer vectors generated
-from Payrexx's own documented PHP snippet (`payrexx/auth_test.go`), so it matches
-the reference implementation byte for byte. It has not been exercised against a
-live Payrexx instance, and Payrexx's current PHP SDK no longer uses this scheme
-at all — prefer `AuthAPIKey` unless you have a specific reason not to.
+from Payrexx's own documented PHP snippet (`payrexx/auth_test.go`), and the
+scheme is verified end to end against a live account by `TestLiveSignatureScheme`.
+It still works, but Payrexx's own PHP SDK abandoned it — prefer `AuthAPIKey`.
 
 To layer your own transport (proxy, tracing, retries) beneath authentication,
 pass an `*http.Client` with a `Transport` set:
@@ -219,11 +218,15 @@ in that output, not as a silent behaviour change.
    setter — i.e. Payrexx itself treats camelCase as the model. **If an endpoint
    really does answer in snake_case, that field decodes as nil.** Only the
    Bill/Invoice entity is documented both ways.
-7. **One error type.** Failure bodies are documented three ways, including a
+7. **Live corrections.** Where a real response contradicts the published schema,
+   the response wins — a model that cannot decode a real answer is worse than a
+   slightly less faithful spec. Each entry names the observation it came from.
+   See *Live tests*.
+8. **One error type.** Failure bodies are documented three ways, including a
    six-branch `oneOf` whose branches differ only in their examples and which pulls
    in a validation dependency. All of them collapse onto `payrexx.Error`.
-8. **`instance` removed** from every operation, and appended by the transport.
-9. **JSON-only request bodies.** The fragments offer JSON and form-encoded; both
+9. **`instance` removed** from every operation, and appended by the transport.
+10. **JSON-only request bodies.** The fragments offer JSON and form-encoded; both
    generate two sets of request types, and Payrexx recommends JSON.
 
 Two upstream quirks are worth knowing about because they are *coerced*, not just
@@ -238,10 +241,44 @@ some endpoints return.
 go test ./...
 ```
 
-Covers the signature encoding against PHP-generated known-answer vectors, the
-`instance` handling, transport layering, and webhook verification including
-forged, missing, wrong-key and wrong-content-type deliveries. No network or
-credentials needed.
+Offline and credential-free. Covers the signature encoding against PHP-generated
+known-answer vectors, the `instance` handling, transport layering, and webhook
+verification including forged, missing, wrong-key and wrong-content-type
+deliveries.
+
+### Live tests
+
+The offline suite proves this package is self-consistent. It cannot prove the
+assembled spec matches the API Payrexx actually serves — and that spec is built
+from documentation already known to be wrong in places. That is what the live
+tests are for:
+
+```sh
+PAYREXX_LIVE_TEST=1 \
+PAYREXX_INSTANCE=example \
+PAYREXX_API_SECRET=... \
+go test -run TestLive -v ./...
+```
+
+They skip without `PAYREXX_LIVE_TEST`, so `go test ./...` stays offline, and CI
+runs them from a separate scheduled workflow rather than on pull requests. They
+create gateways — hosted checkout pages, no money moves, nothing is charged — and
+delete them again in a `t.Cleanup`. Nothing else is written.
+
+Three defects were found this way and are fixed in the code above:
+
+- `Gateway.preAuthorization` is documented as an integer and returned as a
+  **boolean**. Decoding any real gateway failed outright.
+- `Gateway.fields` is documented as an object and returned as `[]` when unset
+  (PHP's empty-array serialization), an object otherwise. Also a hard decode
+  failure.
+- The generator marshals a nil body to the literal `null` and sends it with a
+  Content-Type on **GET** requests. Payrexx reads a present body as the parameter
+  set, so under `AuthSignature` that `null` displaced the query string and every
+  read came back `403 The API secret is not correct`. The transport now drops it.
+
+`Gateway.language` and `Gateway.requestId` are returned but documented nowhere;
+they are in the model with that noted.
 
 ## License
 

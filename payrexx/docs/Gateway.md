@@ -10,9 +10,9 @@ Name | Type | Description | Notes
 **ReferenceId** | Pointer to **string** |  | [optional] 
 **Link** | Pointer to **string** |  | [optional] 
 **Invoices** | Pointer to **[]string** |  | [optional] 
-**PreAuthorization** | Pointer to **int32** |  | [optional] [default to 0]
-**Reservation** | Pointer to **int32** |  | [optional] [default to 0]
-**Fields** | Pointer to [**GatewayFields**](GatewayFields.md) |  | [optional] 
+**PreAuthorization** | Pointer to **bool** | Corrected against the live API: documented as an integer; POST /Gateway/ returns false, and the request schema for the same field is already a boolean. | [optional] 
+**Reservation** | Pointer to **bool** | Corrected against the live API: documented as an integer, but it is preAuthorization&#39;s twin and the request schema types it as a boolean. | [optional] 
+**Fields** | Pointer to **interface{}** | Free-form: an object of per-field settings, or [] when none are set. Corrected against the live API: documented as an object; PHP serializes the empty case as [], so a real response is an object or an empty array depending on the gateway. | [optional] 
 **Psp** | Pointer to **[]string** |  | [optional] 
 **Pm** | Pointer to **[]string** |  | [optional] 
 **Amount** | Pointer to **int32** |  | [optional] [default to 0]
@@ -21,6 +21,8 @@ Name | Type | Description | Notes
 **Sku** | Pointer to **string** |  | [optional] 
 **CreatedAt** | Pointer to **int32** |  | [optional] [default to 0]
 **ApplicationFee** | Pointer to **int32** |  | [optional] [default to 0]
+**Language** | Pointer to **string** | Corrected against the live API: returned by POST and GET /Gateway/ but absent from both pages. | [optional] 
+**RequestId** | Pointer to **int32** | Corrected against the live API: returned by POST /Gateway/ but absent from the page. | [optional] 
 
 ## Methods
 
@@ -193,20 +195,20 @@ HasInvoices returns a boolean if a field has been set.
 
 ### GetPreAuthorization
 
-`func (o *Gateway) GetPreAuthorization() int32`
+`func (o *Gateway) GetPreAuthorization() bool`
 
 GetPreAuthorization returns the PreAuthorization field if non-nil, zero value otherwise.
 
 ### GetPreAuthorizationOk
 
-`func (o *Gateway) GetPreAuthorizationOk() (*int32, bool)`
+`func (o *Gateway) GetPreAuthorizationOk() (*bool, bool)`
 
 GetPreAuthorizationOk returns a tuple with the PreAuthorization field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetPreAuthorization
 
-`func (o *Gateway) SetPreAuthorization(v int32)`
+`func (o *Gateway) SetPreAuthorization(v bool)`
 
 SetPreAuthorization sets PreAuthorization field to given value.
 
@@ -218,20 +220,20 @@ HasPreAuthorization returns a boolean if a field has been set.
 
 ### GetReservation
 
-`func (o *Gateway) GetReservation() int32`
+`func (o *Gateway) GetReservation() bool`
 
 GetReservation returns the Reservation field if non-nil, zero value otherwise.
 
 ### GetReservationOk
 
-`func (o *Gateway) GetReservationOk() (*int32, bool)`
+`func (o *Gateway) GetReservationOk() (*bool, bool)`
 
 GetReservationOk returns a tuple with the Reservation field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetReservation
 
-`func (o *Gateway) SetReservation(v int32)`
+`func (o *Gateway) SetReservation(v bool)`
 
 SetReservation sets Reservation field to given value.
 
@@ -243,20 +245,20 @@ HasReservation returns a boolean if a field has been set.
 
 ### GetFields
 
-`func (o *Gateway) GetFields() GatewayFields`
+`func (o *Gateway) GetFields() interface{}`
 
 GetFields returns the Fields field if non-nil, zero value otherwise.
 
 ### GetFieldsOk
 
-`func (o *Gateway) GetFieldsOk() (*GatewayFields, bool)`
+`func (o *Gateway) GetFieldsOk() (*interface{}, bool)`
 
 GetFieldsOk returns a tuple with the Fields field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetFields
 
-`func (o *Gateway) SetFields(v GatewayFields)`
+`func (o *Gateway) SetFields(v interface{})`
 
 SetFields sets Fields field to given value.
 
@@ -266,6 +268,16 @@ SetFields sets Fields field to given value.
 
 HasFields returns a boolean if a field has been set.
 
+### SetFieldsNil
+
+`func (o *Gateway) SetFieldsNil(b bool)`
+
+ SetFieldsNil sets the value for Fields to be an explicit nil
+
+### UnsetFields
+`func (o *Gateway) UnsetFields()`
+
+UnsetFields ensures that no value is present for Fields, not even an explicit nil
 ### GetPsp
 
 `func (o *Gateway) GetPsp() []string`
@@ -465,6 +477,56 @@ SetApplicationFee sets ApplicationFee field to given value.
 `func (o *Gateway) HasApplicationFee() bool`
 
 HasApplicationFee returns a boolean if a field has been set.
+
+### GetLanguage
+
+`func (o *Gateway) GetLanguage() string`
+
+GetLanguage returns the Language field if non-nil, zero value otherwise.
+
+### GetLanguageOk
+
+`func (o *Gateway) GetLanguageOk() (*string, bool)`
+
+GetLanguageOk returns a tuple with the Language field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetLanguage
+
+`func (o *Gateway) SetLanguage(v string)`
+
+SetLanguage sets Language field to given value.
+
+### HasLanguage
+
+`func (o *Gateway) HasLanguage() bool`
+
+HasLanguage returns a boolean if a field has been set.
+
+### GetRequestId
+
+`func (o *Gateway) GetRequestId() int32`
+
+GetRequestId returns the RequestId field if non-nil, zero value otherwise.
+
+### GetRequestIdOk
+
+`func (o *Gateway) GetRequestIdOk() (*int32, bool)`
+
+GetRequestIdOk returns a tuple with the RequestId field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetRequestId
+
+`func (o *Gateway) SetRequestId(v int32)`
+
+SetRequestId sets RequestId field to given value.
+
+### HasRequestId
+
+`func (o *Gateway) HasRequestId() bool`
+
+HasRequestId returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

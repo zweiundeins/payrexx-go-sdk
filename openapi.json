@@ -5109,271 +5109,15 @@
             "type": "array"
           },
           "preAuthorization": {
-            "type": "integer",
-            "example": 0,
-            "default": 0
+            "type": "boolean",
+            "description": "Corrected against the live API: documented as an integer; POST /Gateway/ returns false, and the request schema for the same field is already a boolean."
           },
           "reservation": {
-            "type": "integer",
-            "example": 0,
-            "default": 0
+            "type": "boolean",
+            "description": "Corrected against the live API: documented as an integer, but it is preAuthorization's twin and the request schema types it as a boolean."
           },
           "fields": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "forename": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "surname": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "company": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "street": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "postcode": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "place": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "country": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "phone": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "email": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "date_of_birth": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  },
-                  "names": {
-                    "type": "object",
-                    "properties": {
-                      "de": {
-                        "type": "string",
-                        "example": ""
-                      },
-                      "en": {
-                        "type": "string",
-                        "example": ""
-                      },
-                      "fr": {
-                        "type": "string",
-                        "example": ""
-                      },
-                      "it": {
-                        "type": "string",
-                        "example": ""
-                      }
-                    }
-                  }
-                }
-              },
-              "terms": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "privacy_policy": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  }
-                }
-              },
-              "text": {
-                "type": "object",
-                "properties": {
-                  "active": {
-                    "type": "boolean",
-                    "example": false,
-                    "default": true
-                  },
-                  "mandatory": {
-                    "type": "boolean",
-                    "example": true,
-                    "default": true
-                  },
-                  "names": {
-                    "type": "object",
-                    "properties": {
-                      "de": {
-                        "type": "string",
-                        "example": "Benutzerdefiniertes Feld (DE)"
-                      },
-                      "en": {
-                        "type": "string",
-                        "example": "Benutzerdefiniertes Feld (EN)"
-                      },
-                      "fr": {
-                        "type": "string",
-                        "example": "Benutzerdefiniertes Feld (FR)"
-                      },
-                      "it": {
-                        "type": "string",
-                        "example": "Benutzerdefiniertes Feld (IT)"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Free-form: an object of per-field settings, or [] when none are set. Corrected against the live API: documented as an object; PHP serializes the empty case as [], so a real response is an object or an empty array depending on the gateway."
           },
           "psp": {
             "type": "array"
@@ -5408,6 +5152,16 @@
             "type": "integer",
             "example": 0,
             "default": 0
+          },
+          "language": {
+            "type": "string",
+            "example": "de",
+            "description": "Corrected against the live API: returned by POST and GET /Gateway/ but absent from both pages."
+          },
+          "requestId": {
+            "type": "integer",
+            "example": 35517679,
+            "description": "Corrected against the live API: returned by POST /Gateway/ but absent from the page."
           }
         }
       },

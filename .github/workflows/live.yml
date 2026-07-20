@@ -1,0 +1,36 @@
+name: Live (Payrexx account)
+
+# The integration tests call a real Payrexx account, so they run on a schedule
+# and on demand rather than on every push -- a Payrexx outage must not block a
+# PR. They create gateways (hosted checkout pages: no money moves, nothing is
+# charged) and delete them again; nothing else is written.
+#
+# The point of running them on a schedule is drift detection. Every correction in
+# scripts/build_spec.py is a claim about an API whose published schema is already
+# known to be wrong in places; these tests are what notices when one of those
+# claims stops holding.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    name: live integration
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+
+      - name: go test -run TestLive
+        env:
+          PAYREXX_LIVE_TEST: '1'
+          PAYREXX_INSTANCE: ${{ secrets.PAYREXX_INSTANCE }}
+          PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
+        run: go test -run TestLive -v ./...

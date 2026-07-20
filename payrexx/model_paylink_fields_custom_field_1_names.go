@@ -14,36 +14,36 @@ import (
 	"encoding/json"
 )
 
-// checks if the GatewayFieldsDateOfBirthNames type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &GatewayFieldsDateOfBirthNames{}
+// checks if the PaylinkFieldsCustomField1Names type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PaylinkFieldsCustomField1Names{}
 
-// GatewayFieldsDateOfBirthNames struct for GatewayFieldsDateOfBirthNames
-type GatewayFieldsDateOfBirthNames struct {
+// PaylinkFieldsCustomField1Names struct for PaylinkFieldsCustomField1Names
+type PaylinkFieldsCustomField1Names struct {
 	De *string `json:"de,omitempty"`
 	En *string `json:"en,omitempty"`
 	Fr *string `json:"fr,omitempty"`
 	It *string `json:"it,omitempty"`
 }
 
-// NewGatewayFieldsDateOfBirthNames instantiates a new GatewayFieldsDateOfBirthNames object
+// NewPaylinkFieldsCustomField1Names instantiates a new PaylinkFieldsCustomField1Names object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGatewayFieldsDateOfBirthNames() *GatewayFieldsDateOfBirthNames {
-	this := GatewayFieldsDateOfBirthNames{}
+func NewPaylinkFieldsCustomField1Names() *PaylinkFieldsCustomField1Names {
+	this := PaylinkFieldsCustomField1Names{}
 	return &this
 }
 
-// NewGatewayFieldsDateOfBirthNamesWithDefaults instantiates a new GatewayFieldsDateOfBirthNames object
+// NewPaylinkFieldsCustomField1NamesWithDefaults instantiates a new PaylinkFieldsCustomField1Names object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewGatewayFieldsDateOfBirthNamesWithDefaults() *GatewayFieldsDateOfBirthNames {
-	this := GatewayFieldsDateOfBirthNames{}
+func NewPaylinkFieldsCustomField1NamesWithDefaults() *PaylinkFieldsCustomField1Names {
+	this := PaylinkFieldsCustomField1Names{}
 	return &this
 }
 
 // GetDe returns the De field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirthNames) GetDe() string {
+func (o *PaylinkFieldsCustomField1Names) GetDe() string {
 	if o == nil || IsNil(o.De) {
 		var ret string
 		return ret
@@ -53,7 +53,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetDe() string {
 
 // GetDeOk returns a tuple with the De field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirthNames) GetDeOk() (*string, bool) {
+func (o *PaylinkFieldsCustomField1Names) GetDeOk() (*string, bool) {
 	if o == nil || IsNil(o.De) {
 		return nil, false
 	}
@@ -61,7 +61,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetDeOk() (*string, bool) {
 }
 
 // HasDe returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirthNames) HasDe() bool {
+func (o *PaylinkFieldsCustomField1Names) HasDe() bool {
 	if o != nil && !IsNil(o.De) {
 		return true
 	}
@@ -70,12 +70,12 @@ func (o *GatewayFieldsDateOfBirthNames) HasDe() bool {
 }
 
 // SetDe gets a reference to the given string and assigns it to the De field.
-func (o *GatewayFieldsDateOfBirthNames) SetDe(v string) {
+func (o *PaylinkFieldsCustomField1Names) SetDe(v string) {
 	o.De = &v
 }
 
 // GetEn returns the En field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirthNames) GetEn() string {
+func (o *PaylinkFieldsCustomField1Names) GetEn() string {
 	if o == nil || IsNil(o.En) {
 		var ret string
 		return ret
@@ -85,7 +85,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetEn() string {
 
 // GetEnOk returns a tuple with the En field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirthNames) GetEnOk() (*string, bool) {
+func (o *PaylinkFieldsCustomField1Names) GetEnOk() (*string, bool) {
 	if o == nil || IsNil(o.En) {
 		return nil, false
 	}
@@ -93,7 +93,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetEnOk() (*string, bool) {
 }
 
 // HasEn returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirthNames) HasEn() bool {
+func (o *PaylinkFieldsCustomField1Names) HasEn() bool {
 	if o != nil && !IsNil(o.En) {
 		return true
 	}
@@ -102,12 +102,12 @@ func (o *GatewayFieldsDateOfBirthNames) HasEn() bool {
 }
 
 // SetEn gets a reference to the given string and assigns it to the En field.
-func (o *GatewayFieldsDateOfBirthNames) SetEn(v string) {
+func (o *PaylinkFieldsCustomField1Names) SetEn(v string) {
 	o.En = &v
 }
 
 // GetFr returns the Fr field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirthNames) GetFr() string {
+func (o *PaylinkFieldsCustomField1Names) GetFr() string {
 	if o == nil || IsNil(o.Fr) {
 		var ret string
 		return ret
@@ -117,7 +117,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetFr() string {
 
 // GetFrOk returns a tuple with the Fr field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirthNames) GetFrOk() (*string, bool) {
+func (o *PaylinkFieldsCustomField1Names) GetFrOk() (*string, bool) {
 	if o == nil || IsNil(o.Fr) {
 		return nil, false
 	}
@@ -125,7 +125,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetFrOk() (*string, bool) {
 }
 
 // HasFr returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirthNames) HasFr() bool {
+func (o *PaylinkFieldsCustomField1Names) HasFr() bool {
 	if o != nil && !IsNil(o.Fr) {
 		return true
 	}
@@ -134,12 +134,12 @@ func (o *GatewayFieldsDateOfBirthNames) HasFr() bool {
 }
 
 // SetFr gets a reference to the given string and assigns it to the Fr field.
-func (o *GatewayFieldsDateOfBirthNames) SetFr(v string) {
+func (o *PaylinkFieldsCustomField1Names) SetFr(v string) {
 	o.Fr = &v
 }
 
 // GetIt returns the It field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirthNames) GetIt() string {
+func (o *PaylinkFieldsCustomField1Names) GetIt() string {
 	if o == nil || IsNil(o.It) {
 		var ret string
 		return ret
@@ -149,7 +149,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetIt() string {
 
 // GetItOk returns a tuple with the It field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirthNames) GetItOk() (*string, bool) {
+func (o *PaylinkFieldsCustomField1Names) GetItOk() (*string, bool) {
 	if o == nil || IsNil(o.It) {
 		return nil, false
 	}
@@ -157,7 +157,7 @@ func (o *GatewayFieldsDateOfBirthNames) GetItOk() (*string, bool) {
 }
 
 // HasIt returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirthNames) HasIt() bool {
+func (o *PaylinkFieldsCustomField1Names) HasIt() bool {
 	if o != nil && !IsNil(o.It) {
 		return true
 	}
@@ -166,11 +166,11 @@ func (o *GatewayFieldsDateOfBirthNames) HasIt() bool {
 }
 
 // SetIt gets a reference to the given string and assigns it to the It field.
-func (o *GatewayFieldsDateOfBirthNames) SetIt(v string) {
+func (o *PaylinkFieldsCustomField1Names) SetIt(v string) {
 	o.It = &v
 }
 
-func (o GatewayFieldsDateOfBirthNames) MarshalJSON() ([]byte, error) {
+func (o PaylinkFieldsCustomField1Names) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -178,7 +178,7 @@ func (o GatewayFieldsDateOfBirthNames) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o GatewayFieldsDateOfBirthNames) ToMap() (map[string]interface{}, error) {
+func (o PaylinkFieldsCustomField1Names) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.De) {
 		toSerialize["de"] = o.De
@@ -195,38 +195,38 @@ func (o GatewayFieldsDateOfBirthNames) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableGatewayFieldsDateOfBirthNames struct {
-	value *GatewayFieldsDateOfBirthNames
+type NullablePaylinkFieldsCustomField1Names struct {
+	value *PaylinkFieldsCustomField1Names
 	isSet bool
 }
 
-func (v NullableGatewayFieldsDateOfBirthNames) Get() *GatewayFieldsDateOfBirthNames {
+func (v NullablePaylinkFieldsCustomField1Names) Get() *PaylinkFieldsCustomField1Names {
 	return v.value
 }
 
-func (v *NullableGatewayFieldsDateOfBirthNames) Set(val *GatewayFieldsDateOfBirthNames) {
+func (v *NullablePaylinkFieldsCustomField1Names) Set(val *PaylinkFieldsCustomField1Names) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableGatewayFieldsDateOfBirthNames) IsSet() bool {
+func (v NullablePaylinkFieldsCustomField1Names) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableGatewayFieldsDateOfBirthNames) Unset() {
+func (v *NullablePaylinkFieldsCustomField1Names) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableGatewayFieldsDateOfBirthNames(val *GatewayFieldsDateOfBirthNames) *NullableGatewayFieldsDateOfBirthNames {
-	return &NullableGatewayFieldsDateOfBirthNames{value: val, isSet: true}
+func NewNullablePaylinkFieldsCustomField1Names(val *PaylinkFieldsCustomField1Names) *NullablePaylinkFieldsCustomField1Names {
+	return &NullablePaylinkFieldsCustomField1Names{value: val, isSet: true}
 }
 
-func (v NullableGatewayFieldsDateOfBirthNames) MarshalJSON() ([]byte, error) {
+func (v NullablePaylinkFieldsCustomField1Names) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableGatewayFieldsDateOfBirthNames) UnmarshalJSON(src []byte) error {
+func (v *NullablePaylinkFieldsCustomField1Names) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

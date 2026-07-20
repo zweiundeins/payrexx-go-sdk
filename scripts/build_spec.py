@@ -266,7 +266,40 @@ def fold_alias_spellings(schema, where: str, folded: list[str]) -> None:
         fold_alias_spellings(schema["items"], f"{where}[]", folded)
 
 
-# 7. A single error type. The pages describe failure bodies in three ways: an
+# 7. Corrections from the live API. Where a response Payrexx actually sends
+#    contradicts the schema Payrexx publishes, the response wins -- a generated
+#    model that cannot decode a real answer is worse than a slightly less
+#    faithful spec. Each entry names the observation it came from so it can be
+#    rechecked when the docs are fixed. Value is (schema, why); a property the
+#    entity does not have yet is added.
+LIVE_OVERRIDES = {
+    "Gateway.preAuthorization": (
+        {"type": "boolean"},
+        "documented as an integer; POST /Gateway/ returns false, and the request "
+        "schema for the same field is already a boolean",
+    ),
+    "Gateway.reservation": (
+        {"type": "boolean"},
+        "documented as an integer, but it is preAuthorization's twin and the "
+        "request schema types it as a boolean",
+    ),
+    "Gateway.fields": (
+        {"description": "Free-form: an object of per-field settings, or [] when none are set."},
+        "documented as an object; PHP serializes the empty case as [], so a real "
+        "response is an object or an empty array depending on the gateway",
+    ),
+    "Gateway.language": (
+        {"type": "string", "example": "de"},
+        "returned by POST and GET /Gateway/ but absent from both pages",
+    ),
+    "Gateway.requestId": (
+        {"type": "integer", "example": 35517679},
+        "returned by POST /Gateway/ but absent from the page",
+    ),
+}
+
+
+# 8. A single error type. The pages describe failure bodies in three ways: an
 #    empty `{"type": "object", "properties": {}}` (most of them, carrying no
 #    information at all), a `{status, message}` envelope, and a `{error: {type,
 #    param, message}}` envelope on the newer Bill and ECR endpoints -- the last
@@ -435,6 +468,20 @@ def build(fragments: dict[str, str]) -> dict:
         print(">> NOT IN OPERATIONS TABLE (kept slug-derived naming, grouped under DefaultAPI):")
         for entry in sorted(untagged):
             print(f"     {entry}")
+    for dotted, (schema, reason) in LIVE_OVERRIDES.items():
+        entity, *trail = dotted.split(".")
+        parent = entities.get(entity)
+        for step in trail[:-1]:
+            parent = (parent or {}).get("properties", {}).get(step)
+        props = (parent or {}).get("properties")
+        if props is None:
+            conflicts.append(f"LIVE_OVERRIDES entry {dotted} matched nothing -- upstream changed")
+            continue
+        note = f"Corrected against the live API: {reason}."
+        props[trail[-1]] = {**schema, "description": " ".join(
+            filter(None, [schema.get("description"), note])
+        )}
+
     # Every hoisted reference has to resolve, or the generator emits a client
     # that will not compile -- cheaper to catch here than three minutes later.
     referenced = set(re.findall(r'"#/components/schemas/([A-Za-z0-9_]+)"', json.dumps(paths)))

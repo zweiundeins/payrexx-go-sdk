@@ -52,10 +52,6 @@ docs/GatewayCreateRequestFields.md
 docs/GatewayCreateRequestFieldsCustomField1.md
 docs/GatewayCreateRequestFieldsCustomField2.md
 docs/GatewayCreateRequestFieldsTitle.md
-docs/GatewayFields.md
-docs/GatewayFieldsDateOfBirth.md
-docs/GatewayFieldsDateOfBirthNames.md
-docs/GatewayFieldsTitle.md
 docs/Invoice.md
 docs/InvoiceAPI.md
 docs/InvoiceBankInformation.md
@@ -71,6 +67,9 @@ docs/InvoiceRemindersInner.md
 docs/InvoiceServicePeriod.md
 docs/Paylink.md
 docs/PaylinkFields.md
+docs/PaylinkFieldsCustomField1.md
+docs/PaylinkFieldsCustomField1Names.md
+docs/PaylinkFieldsTitle.md
 docs/PaymentProvider.md
 docs/PaymentProviderAPI.md
 docs/PaymentProviderList200Response.md
@@ -145,10 +144,6 @@ model_gateway_create_request_fields.go
 model_gateway_create_request_fields_custom_field_1.go
 model_gateway_create_request_fields_custom_field_2.go
 model_gateway_create_request_fields_title.go
-model_gateway_fields.go
-model_gateway_fields_date_of_birth.go
-model_gateway_fields_date_of_birth_names.go
-model_gateway_fields_title.go
 model_invoice.go
 model_invoice_bank_information.go
 model_invoice_cash_discounts_inner.go
@@ -163,6 +158,9 @@ model_invoice_reminders_inner.go
 model_invoice_service_period.go
 model_paylink.go
 model_paylink_fields.go
+model_paylink_fields_custom_field_1.go
+model_paylink_fields_custom_field_1_names.go
+model_paylink_fields_title.go
 model_payment_provider.go
 model_payment_provider_list_200_response.go
 model_payout.go

@@ -236,6 +236,46 @@ func TestSignatureSchemeSignsJSONBody(t *testing.T) {
 	}
 }
 
+func TestGetRequestsCarryNoBody(t *testing.T) {
+	// The generator marshals a nil body to the literal `null` and sends it with a
+	// Content-Type on GETs too. Payrexx reads a present body as the parameter set,
+	// so under AuthSignature that `null` displaces the query string and the call
+	// comes back 403 "The API secret is not correct" -- verified against the live
+	// API. Both schemes must reach the wire without it.
+	for _, scheme := range []struct {
+		name string
+		auth AuthScheme
+	}{{"api key", AuthAPIKey}, {"signature", AuthSignature}} {
+		t.Run(scheme.name, func(t *testing.T) {
+			var body []byte
+			var contentType string
+			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				body, _ = io.ReadAll(r.Body)
+				contentType = r.Header.Get("Content-Type")
+				w.Header().Set("Content-Type", "application/json")
+				io.WriteString(w, `{"status":"success","data":[]}`)
+			}))
+			defer srv.Close()
+
+			client, err := NewClient(Config{
+				Instance: "demo", APISecret: testSecret, Auth: scheme.auth, BaseURL: srv.URL,
+			})
+			if err != nil {
+				t.Fatalf("NewClient: %v", err)
+			}
+			if _, _, err := client.TransactionAPI.TransactionList(context.Background()).Execute(); err != nil {
+				t.Fatalf("TransactionList: %v", err)
+			}
+			if len(body) != 0 {
+				t.Errorf("GET carried a body %q, want none", body)
+			}
+			if contentType != "" {
+				t.Errorf("GET carried Content-Type %q, want none", contentType)
+			}
+		})
+	}
+}
+
 func TestNewClientRejectsIncompleteConfig(t *testing.T) {
 	if _, err := NewClient(Config{APISecret: "x"}); err == nil {
 		t.Error("missing Instance was accepted")

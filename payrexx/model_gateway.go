@@ -19,23 +19,30 @@ var _ MappedNullable = &Gateway{}
 
 // Gateway struct for Gateway
 type Gateway struct {
-	Id               *int32         `json:"id,omitempty"`
-	Status           *string        `json:"status,omitempty"`
-	Hash             *string        `json:"hash,omitempty"`
-	ReferenceId      *string        `json:"referenceId,omitempty"`
-	Link             *string        `json:"link,omitempty"`
-	Invoices         []string       `json:"invoices,omitempty"`
-	PreAuthorization *int32         `json:"preAuthorization,omitempty"`
-	Reservation      *int32         `json:"reservation,omitempty"`
-	Fields           *GatewayFields `json:"fields,omitempty"`
-	Psp              []string       `json:"psp,omitempty"`
-	Pm               []string       `json:"pm,omitempty"`
-	Amount           *int32         `json:"amount,omitempty"`
-	VatRate          *float32       `json:"vatRate,omitempty"`
-	Currency         *string        `json:"currency,omitempty"`
-	Sku              *string        `json:"sku,omitempty"`
-	CreatedAt        *int32         `json:"createdAt,omitempty"`
-	ApplicationFee   *int32         `json:"applicationFee,omitempty"`
+	Id          *int32   `json:"id,omitempty"`
+	Status      *string  `json:"status,omitempty"`
+	Hash        *string  `json:"hash,omitempty"`
+	ReferenceId *string  `json:"referenceId,omitempty"`
+	Link        *string  `json:"link,omitempty"`
+	Invoices    []string `json:"invoices,omitempty"`
+	// Corrected against the live API: documented as an integer; POST /Gateway/ returns false, and the request schema for the same field is already a boolean.
+	PreAuthorization *bool `json:"preAuthorization,omitempty"`
+	// Corrected against the live API: documented as an integer, but it is preAuthorization's twin and the request schema types it as a boolean.
+	Reservation *bool `json:"reservation,omitempty"`
+	// Free-form: an object of per-field settings, or [] when none are set. Corrected against the live API: documented as an object; PHP serializes the empty case as [], so a real response is an object or an empty array depending on the gateway.
+	Fields         interface{} `json:"fields,omitempty"`
+	Psp            []string    `json:"psp,omitempty"`
+	Pm             []string    `json:"pm,omitempty"`
+	Amount         *int32      `json:"amount,omitempty"`
+	VatRate        *float32    `json:"vatRate,omitempty"`
+	Currency       *string     `json:"currency,omitempty"`
+	Sku            *string     `json:"sku,omitempty"`
+	CreatedAt      *int32      `json:"createdAt,omitempty"`
+	ApplicationFee *int32      `json:"applicationFee,omitempty"`
+	// Corrected against the live API: returned by POST and GET /Gateway/ but absent from both pages.
+	Language *string `json:"language,omitempty"`
+	// Corrected against the live API: returned by POST /Gateway/ but absent from the page.
+	RequestId *int32 `json:"requestId,omitempty"`
 }
 
 // NewGateway instantiates a new Gateway object
@@ -46,10 +53,6 @@ func NewGateway() *Gateway {
 	this := Gateway{}
 	var id int32 = 0
 	this.Id = &id
-	var preAuthorization int32 = 0
-	this.PreAuthorization = &preAuthorization
-	var reservation int32 = 0
-	this.Reservation = &reservation
 	var amount int32 = 0
 	this.Amount = &amount
 	var vatRate float32 = 0
@@ -68,10 +71,6 @@ func NewGatewayWithDefaults() *Gateway {
 	this := Gateway{}
 	var id int32 = 0
 	this.Id = &id
-	var preAuthorization int32 = 0
-	this.PreAuthorization = &preAuthorization
-	var reservation int32 = 0
-	this.Reservation = &reservation
 	var amount int32 = 0
 	this.Amount = &amount
 	var vatRate float32 = 0
@@ -276,9 +275,9 @@ func (o *Gateway) SetInvoices(v []string) {
 }
 
 // GetPreAuthorization returns the PreAuthorization field value if set, zero value otherwise.
-func (o *Gateway) GetPreAuthorization() int32 {
+func (o *Gateway) GetPreAuthorization() bool {
 	if o == nil || IsNil(o.PreAuthorization) {
-		var ret int32
+		var ret bool
 		return ret
 	}
 	return *o.PreAuthorization
@@ -286,7 +285,7 @@ func (o *Gateway) GetPreAuthorization() int32 {
 
 // GetPreAuthorizationOk returns a tuple with the PreAuthorization field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Gateway) GetPreAuthorizationOk() (*int32, bool) {
+func (o *Gateway) GetPreAuthorizationOk() (*bool, bool) {
 	if o == nil || IsNil(o.PreAuthorization) {
 		return nil, false
 	}
@@ -302,15 +301,15 @@ func (o *Gateway) HasPreAuthorization() bool {
 	return false
 }
 
-// SetPreAuthorization gets a reference to the given int32 and assigns it to the PreAuthorization field.
-func (o *Gateway) SetPreAuthorization(v int32) {
+// SetPreAuthorization gets a reference to the given bool and assigns it to the PreAuthorization field.
+func (o *Gateway) SetPreAuthorization(v bool) {
 	o.PreAuthorization = &v
 }
 
 // GetReservation returns the Reservation field value if set, zero value otherwise.
-func (o *Gateway) GetReservation() int32 {
+func (o *Gateway) GetReservation() bool {
 	if o == nil || IsNil(o.Reservation) {
-		var ret int32
+		var ret bool
 		return ret
 	}
 	return *o.Reservation
@@ -318,7 +317,7 @@ func (o *Gateway) GetReservation() int32 {
 
 // GetReservationOk returns a tuple with the Reservation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Gateway) GetReservationOk() (*int32, bool) {
+func (o *Gateway) GetReservationOk() (*bool, bool) {
 	if o == nil || IsNil(o.Reservation) {
 		return nil, false
 	}
@@ -334,27 +333,28 @@ func (o *Gateway) HasReservation() bool {
 	return false
 }
 
-// SetReservation gets a reference to the given int32 and assigns it to the Reservation field.
-func (o *Gateway) SetReservation(v int32) {
+// SetReservation gets a reference to the given bool and assigns it to the Reservation field.
+func (o *Gateway) SetReservation(v bool) {
 	o.Reservation = &v
 }
 
-// GetFields returns the Fields field value if set, zero value otherwise.
-func (o *Gateway) GetFields() GatewayFields {
-	if o == nil || IsNil(o.Fields) {
-		var ret GatewayFields
+// GetFields returns the Fields field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *Gateway) GetFields() interface{} {
+	if o == nil {
+		var ret interface{}
 		return ret
 	}
-	return *o.Fields
+	return o.Fields
 }
 
 // GetFieldsOk returns a tuple with the Fields field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *Gateway) GetFieldsOk() (*GatewayFields, bool) {
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *Gateway) GetFieldsOk() (*interface{}, bool) {
 	if o == nil || IsNil(o.Fields) {
 		return nil, false
 	}
-	return o.Fields, true
+	return &o.Fields, true
 }
 
 // HasFields returns a boolean if a field has been set.
@@ -366,9 +366,9 @@ func (o *Gateway) HasFields() bool {
 	return false
 }
 
-// SetFields gets a reference to the given GatewayFields and assigns it to the Fields field.
-func (o *Gateway) SetFields(v GatewayFields) {
-	o.Fields = &v
+// SetFields gets a reference to the given interface{} and assigns it to the Fields field.
+func (o *Gateway) SetFields(v interface{}) {
+	o.Fields = v
 }
 
 // GetPsp returns the Psp field value if set, zero value otherwise.
@@ -627,6 +627,70 @@ func (o *Gateway) SetApplicationFee(v int32) {
 	o.ApplicationFee = &v
 }
 
+// GetLanguage returns the Language field value if set, zero value otherwise.
+func (o *Gateway) GetLanguage() string {
+	if o == nil || IsNil(o.Language) {
+		var ret string
+		return ret
+	}
+	return *o.Language
+}
+
+// GetLanguageOk returns a tuple with the Language field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Gateway) GetLanguageOk() (*string, bool) {
+	if o == nil || IsNil(o.Language) {
+		return nil, false
+	}
+	return o.Language, true
+}
+
+// HasLanguage returns a boolean if a field has been set.
+func (o *Gateway) HasLanguage() bool {
+	if o != nil && !IsNil(o.Language) {
+		return true
+	}
+
+	return false
+}
+
+// SetLanguage gets a reference to the given string and assigns it to the Language field.
+func (o *Gateway) SetLanguage(v string) {
+	o.Language = &v
+}
+
+// GetRequestId returns the RequestId field value if set, zero value otherwise.
+func (o *Gateway) GetRequestId() int32 {
+	if o == nil || IsNil(o.RequestId) {
+		var ret int32
+		return ret
+	}
+	return *o.RequestId
+}
+
+// GetRequestIdOk returns a tuple with the RequestId field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Gateway) GetRequestIdOk() (*int32, bool) {
+	if o == nil || IsNil(o.RequestId) {
+		return nil, false
+	}
+	return o.RequestId, true
+}
+
+// HasRequestId returns a boolean if a field has been set.
+func (o *Gateway) HasRequestId() bool {
+	if o != nil && !IsNil(o.RequestId) {
+		return true
+	}
+
+	return false
+}
+
+// SetRequestId gets a reference to the given int32 and assigns it to the RequestId field.
+func (o *Gateway) SetRequestId(v int32) {
+	o.RequestId = &v
+}
+
 func (o Gateway) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -661,7 +725,7 @@ func (o Gateway) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Reservation) {
 		toSerialize["reservation"] = o.Reservation
 	}
-	if !IsNil(o.Fields) {
+	if o.Fields != nil {
 		toSerialize["fields"] = o.Fields
 	}
 	if !IsNil(o.Psp) {
@@ -687,6 +751,12 @@ func (o Gateway) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ApplicationFee) {
 		toSerialize["applicationFee"] = o.ApplicationFee
+	}
+	if !IsNil(o.Language) {
+		toSerialize["language"] = o.Language
+	}
+	if !IsNil(o.RequestId) {
+		toSerialize["requestId"] = o.RequestId
 	}
 	return toSerialize, nil
 }

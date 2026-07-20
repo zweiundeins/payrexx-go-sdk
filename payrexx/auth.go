@@ -130,6 +130,20 @@ func (t *authTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	// a clone.
 	r := req.Clone(req.Context())
 
+	// The generator marshals a nil body to the JSON literal `null` and sends it
+	// with a Content-Type on every request, including GETs. Payrexx treats a
+	// request that carries a body as one whose parameters live in that body, so
+	// under AuthSignature the `null` displaces the query string and the call is
+	// rejected with "The API secret is not correct". Dropping it is right either
+	// way -- a GET body means nothing here -- and keeps both schemes sending the
+	// same bytes.
+	if r.Method == http.MethodGet || r.Method == http.MethodDelete {
+		if body, err := readRequestBody(r); err == nil && isEmptyJSON(body) {
+			r.Body, r.GetBody, r.ContentLength = nil, nil, 0
+			r.Header.Del("Content-Type")
+		}
+	}
+
 	if t.scheme == AuthSignature {
 		if err := t.sign(r); err != nil {
 			return nil, err
@@ -208,6 +222,16 @@ func (t *authTransport) signature(query string) string {
 	mac := hmac.New(sha256.New, []byte(t.secret))
 	mac.Write([]byte(query))
 	return base64.StdEncoding.EncodeToString(mac.Sum(nil))
+}
+
+// isEmptyJSON reports whether a body carries no parameters — absent, blank, the
+// literal null, or an empty object.
+func isEmptyJSON(body []byte) bool {
+	switch string(bytes.TrimSpace(body)) {
+	case "", "null", "{}":
+		return true
+	}
+	return false
 }
 
 func readRequestBody(r *http.Request) ([]byte, error) {

@@ -19,22 +19,22 @@ var _ MappedNullable = &PaylinkFields{}
 
 // PaylinkFields struct for PaylinkFields
 type PaylinkFields struct {
-	Title         *GatewayFieldsTitle       `json:"title,omitempty"`
-	Forename      *GatewayFieldsTitle       `json:"forename,omitempty"`
-	Surname       *GatewayFieldsTitle       `json:"surname,omitempty"`
-	Company       *GatewayFieldsTitle       `json:"company,omitempty"`
-	Street        *GatewayFieldsTitle       `json:"street,omitempty"`
-	Postcode      *GatewayFieldsTitle       `json:"postcode,omitempty"`
-	Place         *GatewayFieldsTitle       `json:"place,omitempty"`
-	Country       *GatewayFieldsTitle       `json:"country,omitempty"`
-	Phone         *GatewayFieldsTitle       `json:"phone,omitempty"`
-	Email         *GatewayFieldsTitle       `json:"email,omitempty"`
-	DateOfBirth   *GatewayFieldsTitle       `json:"date_of_birth,omitempty"`
-	Terms         *GatewayFieldsTitle       `json:"terms,omitempty"`
-	PrivacyPolicy *GatewayFieldsTitle       `json:"privacy_policy,omitempty"`
-	CustomField1  *GatewayFieldsDateOfBirth `json:"custom_field_1,omitempty"`
-	CustomField2  *GatewayFieldsDateOfBirth `json:"custom_field_2,omitempty"`
-	CustomField3  *GatewayFieldsDateOfBirth `json:"custom_field_3,omitempty"`
+	Title         *PaylinkFieldsTitle        `json:"title,omitempty"`
+	Forename      *PaylinkFieldsTitle        `json:"forename,omitempty"`
+	Surname       *PaylinkFieldsTitle        `json:"surname,omitempty"`
+	Company       *PaylinkFieldsTitle        `json:"company,omitempty"`
+	Street        *PaylinkFieldsTitle        `json:"street,omitempty"`
+	Postcode      *PaylinkFieldsTitle        `json:"postcode,omitempty"`
+	Place         *PaylinkFieldsTitle        `json:"place,omitempty"`
+	Country       *PaylinkFieldsTitle        `json:"country,omitempty"`
+	Phone         *PaylinkFieldsTitle        `json:"phone,omitempty"`
+	Email         *PaylinkFieldsTitle        `json:"email,omitempty"`
+	DateOfBirth   *PaylinkFieldsTitle        `json:"date_of_birth,omitempty"`
+	Terms         *PaylinkFieldsTitle        `json:"terms,omitempty"`
+	PrivacyPolicy *PaylinkFieldsTitle        `json:"privacy_policy,omitempty"`
+	CustomField1  *PaylinkFieldsCustomField1 `json:"custom_field_1,omitempty"`
+	CustomField2  *PaylinkFieldsCustomField1 `json:"custom_field_2,omitempty"`
+	CustomField3  *PaylinkFieldsCustomField1 `json:"custom_field_3,omitempty"`
 }
 
 // NewPaylinkFields instantiates a new PaylinkFields object
@@ -55,9 +55,9 @@ func NewPaylinkFieldsWithDefaults() *PaylinkFields {
 }
 
 // GetTitle returns the Title field value if set, zero value otherwise.
-func (o *PaylinkFields) GetTitle() GatewayFieldsTitle {
+func (o *PaylinkFields) GetTitle() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Title) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Title
@@ -65,7 +65,7 @@ func (o *PaylinkFields) GetTitle() GatewayFieldsTitle {
 
 // GetTitleOk returns a tuple with the Title field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetTitleOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetTitleOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Title) {
 		return nil, false
 	}
@@ -81,15 +81,15 @@ func (o *PaylinkFields) HasTitle() bool {
 	return false
 }
 
-// SetTitle gets a reference to the given GatewayFieldsTitle and assigns it to the Title field.
-func (o *PaylinkFields) SetTitle(v GatewayFieldsTitle) {
+// SetTitle gets a reference to the given PaylinkFieldsTitle and assigns it to the Title field.
+func (o *PaylinkFields) SetTitle(v PaylinkFieldsTitle) {
 	o.Title = &v
 }
 
 // GetForename returns the Forename field value if set, zero value otherwise.
-func (o *PaylinkFields) GetForename() GatewayFieldsTitle {
+func (o *PaylinkFields) GetForename() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Forename) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Forename
@@ -97,7 +97,7 @@ func (o *PaylinkFields) GetForename() GatewayFieldsTitle {
 
 // GetForenameOk returns a tuple with the Forename field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetForenameOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetForenameOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Forename) {
 		return nil, false
 	}
@@ -113,15 +113,15 @@ func (o *PaylinkFields) HasForename() bool {
 	return false
 }
 
-// SetForename gets a reference to the given GatewayFieldsTitle and assigns it to the Forename field.
-func (o *PaylinkFields) SetForename(v GatewayFieldsTitle) {
+// SetForename gets a reference to the given PaylinkFieldsTitle and assigns it to the Forename field.
+func (o *PaylinkFields) SetForename(v PaylinkFieldsTitle) {
 	o.Forename = &v
 }
 
 // GetSurname returns the Surname field value if set, zero value otherwise.
-func (o *PaylinkFields) GetSurname() GatewayFieldsTitle {
+func (o *PaylinkFields) GetSurname() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Surname) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Surname
@@ -129,7 +129,7 @@ func (o *PaylinkFields) GetSurname() GatewayFieldsTitle {
 
 // GetSurnameOk returns a tuple with the Surname field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetSurnameOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetSurnameOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Surname) {
 		return nil, false
 	}
@@ -145,15 +145,15 @@ func (o *PaylinkFields) HasSurname() bool {
 	return false
 }
 
-// SetSurname gets a reference to the given GatewayFieldsTitle and assigns it to the Surname field.
-func (o *PaylinkFields) SetSurname(v GatewayFieldsTitle) {
+// SetSurname gets a reference to the given PaylinkFieldsTitle and assigns it to the Surname field.
+func (o *PaylinkFields) SetSurname(v PaylinkFieldsTitle) {
 	o.Surname = &v
 }
 
 // GetCompany returns the Company field value if set, zero value otherwise.
-func (o *PaylinkFields) GetCompany() GatewayFieldsTitle {
+func (o *PaylinkFields) GetCompany() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Company) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Company
@@ -161,7 +161,7 @@ func (o *PaylinkFields) GetCompany() GatewayFieldsTitle {
 
 // GetCompanyOk returns a tuple with the Company field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetCompanyOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetCompanyOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Company) {
 		return nil, false
 	}
@@ -177,15 +177,15 @@ func (o *PaylinkFields) HasCompany() bool {
 	return false
 }
 
-// SetCompany gets a reference to the given GatewayFieldsTitle and assigns it to the Company field.
-func (o *PaylinkFields) SetCompany(v GatewayFieldsTitle) {
+// SetCompany gets a reference to the given PaylinkFieldsTitle and assigns it to the Company field.
+func (o *PaylinkFields) SetCompany(v PaylinkFieldsTitle) {
 	o.Company = &v
 }
 
 // GetStreet returns the Street field value if set, zero value otherwise.
-func (o *PaylinkFields) GetStreet() GatewayFieldsTitle {
+func (o *PaylinkFields) GetStreet() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Street) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Street
@@ -193,7 +193,7 @@ func (o *PaylinkFields) GetStreet() GatewayFieldsTitle {
 
 // GetStreetOk returns a tuple with the Street field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetStreetOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetStreetOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Street) {
 		return nil, false
 	}
@@ -209,15 +209,15 @@ func (o *PaylinkFields) HasStreet() bool {
 	return false
 }
 
-// SetStreet gets a reference to the given GatewayFieldsTitle and assigns it to the Street field.
-func (o *PaylinkFields) SetStreet(v GatewayFieldsTitle) {
+// SetStreet gets a reference to the given PaylinkFieldsTitle and assigns it to the Street field.
+func (o *PaylinkFields) SetStreet(v PaylinkFieldsTitle) {
 	o.Street = &v
 }
 
 // GetPostcode returns the Postcode field value if set, zero value otherwise.
-func (o *PaylinkFields) GetPostcode() GatewayFieldsTitle {
+func (o *PaylinkFields) GetPostcode() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Postcode) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Postcode
@@ -225,7 +225,7 @@ func (o *PaylinkFields) GetPostcode() GatewayFieldsTitle {
 
 // GetPostcodeOk returns a tuple with the Postcode field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetPostcodeOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetPostcodeOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Postcode) {
 		return nil, false
 	}
@@ -241,15 +241,15 @@ func (o *PaylinkFields) HasPostcode() bool {
 	return false
 }
 
-// SetPostcode gets a reference to the given GatewayFieldsTitle and assigns it to the Postcode field.
-func (o *PaylinkFields) SetPostcode(v GatewayFieldsTitle) {
+// SetPostcode gets a reference to the given PaylinkFieldsTitle and assigns it to the Postcode field.
+func (o *PaylinkFields) SetPostcode(v PaylinkFieldsTitle) {
 	o.Postcode = &v
 }
 
 // GetPlace returns the Place field value if set, zero value otherwise.
-func (o *PaylinkFields) GetPlace() GatewayFieldsTitle {
+func (o *PaylinkFields) GetPlace() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Place) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Place
@@ -257,7 +257,7 @@ func (o *PaylinkFields) GetPlace() GatewayFieldsTitle {
 
 // GetPlaceOk returns a tuple with the Place field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetPlaceOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetPlaceOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Place) {
 		return nil, false
 	}
@@ -273,15 +273,15 @@ func (o *PaylinkFields) HasPlace() bool {
 	return false
 }
 
-// SetPlace gets a reference to the given GatewayFieldsTitle and assigns it to the Place field.
-func (o *PaylinkFields) SetPlace(v GatewayFieldsTitle) {
+// SetPlace gets a reference to the given PaylinkFieldsTitle and assigns it to the Place field.
+func (o *PaylinkFields) SetPlace(v PaylinkFieldsTitle) {
 	o.Place = &v
 }
 
 // GetCountry returns the Country field value if set, zero value otherwise.
-func (o *PaylinkFields) GetCountry() GatewayFieldsTitle {
+func (o *PaylinkFields) GetCountry() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Country) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Country
@@ -289,7 +289,7 @@ func (o *PaylinkFields) GetCountry() GatewayFieldsTitle {
 
 // GetCountryOk returns a tuple with the Country field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetCountryOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetCountryOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Country) {
 		return nil, false
 	}
@@ -305,15 +305,15 @@ func (o *PaylinkFields) HasCountry() bool {
 	return false
 }
 
-// SetCountry gets a reference to the given GatewayFieldsTitle and assigns it to the Country field.
-func (o *PaylinkFields) SetCountry(v GatewayFieldsTitle) {
+// SetCountry gets a reference to the given PaylinkFieldsTitle and assigns it to the Country field.
+func (o *PaylinkFields) SetCountry(v PaylinkFieldsTitle) {
 	o.Country = &v
 }
 
 // GetPhone returns the Phone field value if set, zero value otherwise.
-func (o *PaylinkFields) GetPhone() GatewayFieldsTitle {
+func (o *PaylinkFields) GetPhone() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Phone) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Phone
@@ -321,7 +321,7 @@ func (o *PaylinkFields) GetPhone() GatewayFieldsTitle {
 
 // GetPhoneOk returns a tuple with the Phone field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetPhoneOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetPhoneOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Phone) {
 		return nil, false
 	}
@@ -337,15 +337,15 @@ func (o *PaylinkFields) HasPhone() bool {
 	return false
 }
 
-// SetPhone gets a reference to the given GatewayFieldsTitle and assigns it to the Phone field.
-func (o *PaylinkFields) SetPhone(v GatewayFieldsTitle) {
+// SetPhone gets a reference to the given PaylinkFieldsTitle and assigns it to the Phone field.
+func (o *PaylinkFields) SetPhone(v PaylinkFieldsTitle) {
 	o.Phone = &v
 }
 
 // GetEmail returns the Email field value if set, zero value otherwise.
-func (o *PaylinkFields) GetEmail() GatewayFieldsTitle {
+func (o *PaylinkFields) GetEmail() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Email) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Email
@@ -353,7 +353,7 @@ func (o *PaylinkFields) GetEmail() GatewayFieldsTitle {
 
 // GetEmailOk returns a tuple with the Email field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetEmailOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetEmailOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Email) {
 		return nil, false
 	}
@@ -369,15 +369,15 @@ func (o *PaylinkFields) HasEmail() bool {
 	return false
 }
 
-// SetEmail gets a reference to the given GatewayFieldsTitle and assigns it to the Email field.
-func (o *PaylinkFields) SetEmail(v GatewayFieldsTitle) {
+// SetEmail gets a reference to the given PaylinkFieldsTitle and assigns it to the Email field.
+func (o *PaylinkFields) SetEmail(v PaylinkFieldsTitle) {
 	o.Email = &v
 }
 
 // GetDateOfBirth returns the DateOfBirth field value if set, zero value otherwise.
-func (o *PaylinkFields) GetDateOfBirth() GatewayFieldsTitle {
+func (o *PaylinkFields) GetDateOfBirth() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.DateOfBirth) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.DateOfBirth
@@ -385,7 +385,7 @@ func (o *PaylinkFields) GetDateOfBirth() GatewayFieldsTitle {
 
 // GetDateOfBirthOk returns a tuple with the DateOfBirth field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetDateOfBirthOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetDateOfBirthOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.DateOfBirth) {
 		return nil, false
 	}
@@ -401,15 +401,15 @@ func (o *PaylinkFields) HasDateOfBirth() bool {
 	return false
 }
 
-// SetDateOfBirth gets a reference to the given GatewayFieldsTitle and assigns it to the DateOfBirth field.
-func (o *PaylinkFields) SetDateOfBirth(v GatewayFieldsTitle) {
+// SetDateOfBirth gets a reference to the given PaylinkFieldsTitle and assigns it to the DateOfBirth field.
+func (o *PaylinkFields) SetDateOfBirth(v PaylinkFieldsTitle) {
 	o.DateOfBirth = &v
 }
 
 // GetTerms returns the Terms field value if set, zero value otherwise.
-func (o *PaylinkFields) GetTerms() GatewayFieldsTitle {
+func (o *PaylinkFields) GetTerms() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.Terms) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.Terms
@@ -417,7 +417,7 @@ func (o *PaylinkFields) GetTerms() GatewayFieldsTitle {
 
 // GetTermsOk returns a tuple with the Terms field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetTermsOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetTermsOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.Terms) {
 		return nil, false
 	}
@@ -433,15 +433,15 @@ func (o *PaylinkFields) HasTerms() bool {
 	return false
 }
 
-// SetTerms gets a reference to the given GatewayFieldsTitle and assigns it to the Terms field.
-func (o *PaylinkFields) SetTerms(v GatewayFieldsTitle) {
+// SetTerms gets a reference to the given PaylinkFieldsTitle and assigns it to the Terms field.
+func (o *PaylinkFields) SetTerms(v PaylinkFieldsTitle) {
 	o.Terms = &v
 }
 
 // GetPrivacyPolicy returns the PrivacyPolicy field value if set, zero value otherwise.
-func (o *PaylinkFields) GetPrivacyPolicy() GatewayFieldsTitle {
+func (o *PaylinkFields) GetPrivacyPolicy() PaylinkFieldsTitle {
 	if o == nil || IsNil(o.PrivacyPolicy) {
-		var ret GatewayFieldsTitle
+		var ret PaylinkFieldsTitle
 		return ret
 	}
 	return *o.PrivacyPolicy
@@ -449,7 +449,7 @@ func (o *PaylinkFields) GetPrivacyPolicy() GatewayFieldsTitle {
 
 // GetPrivacyPolicyOk returns a tuple with the PrivacyPolicy field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetPrivacyPolicyOk() (*GatewayFieldsTitle, bool) {
+func (o *PaylinkFields) GetPrivacyPolicyOk() (*PaylinkFieldsTitle, bool) {
 	if o == nil || IsNil(o.PrivacyPolicy) {
 		return nil, false
 	}
@@ -465,15 +465,15 @@ func (o *PaylinkFields) HasPrivacyPolicy() bool {
 	return false
 }
 
-// SetPrivacyPolicy gets a reference to the given GatewayFieldsTitle and assigns it to the PrivacyPolicy field.
-func (o *PaylinkFields) SetPrivacyPolicy(v GatewayFieldsTitle) {
+// SetPrivacyPolicy gets a reference to the given PaylinkFieldsTitle and assigns it to the PrivacyPolicy field.
+func (o *PaylinkFields) SetPrivacyPolicy(v PaylinkFieldsTitle) {
 	o.PrivacyPolicy = &v
 }
 
 // GetCustomField1 returns the CustomField1 field value if set, zero value otherwise.
-func (o *PaylinkFields) GetCustomField1() GatewayFieldsDateOfBirth {
+func (o *PaylinkFields) GetCustomField1() PaylinkFieldsCustomField1 {
 	if o == nil || IsNil(o.CustomField1) {
-		var ret GatewayFieldsDateOfBirth
+		var ret PaylinkFieldsCustomField1
 		return ret
 	}
 	return *o.CustomField1
@@ -481,7 +481,7 @@ func (o *PaylinkFields) GetCustomField1() GatewayFieldsDateOfBirth {
 
 // GetCustomField1Ok returns a tuple with the CustomField1 field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetCustomField1Ok() (*GatewayFieldsDateOfBirth, bool) {
+func (o *PaylinkFields) GetCustomField1Ok() (*PaylinkFieldsCustomField1, bool) {
 	if o == nil || IsNil(o.CustomField1) {
 		return nil, false
 	}
@@ -497,15 +497,15 @@ func (o *PaylinkFields) HasCustomField1() bool {
 	return false
 }
 
-// SetCustomField1 gets a reference to the given GatewayFieldsDateOfBirth and assigns it to the CustomField1 field.
-func (o *PaylinkFields) SetCustomField1(v GatewayFieldsDateOfBirth) {
+// SetCustomField1 gets a reference to the given PaylinkFieldsCustomField1 and assigns it to the CustomField1 field.
+func (o *PaylinkFields) SetCustomField1(v PaylinkFieldsCustomField1) {
 	o.CustomField1 = &v
 }
 
 // GetCustomField2 returns the CustomField2 field value if set, zero value otherwise.
-func (o *PaylinkFields) GetCustomField2() GatewayFieldsDateOfBirth {
+func (o *PaylinkFields) GetCustomField2() PaylinkFieldsCustomField1 {
 	if o == nil || IsNil(o.CustomField2) {
-		var ret GatewayFieldsDateOfBirth
+		var ret PaylinkFieldsCustomField1
 		return ret
 	}
 	return *o.CustomField2
@@ -513,7 +513,7 @@ func (o *PaylinkFields) GetCustomField2() GatewayFieldsDateOfBirth {
 
 // GetCustomField2Ok returns a tuple with the CustomField2 field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetCustomField2Ok() (*GatewayFieldsDateOfBirth, bool) {
+func (o *PaylinkFields) GetCustomField2Ok() (*PaylinkFieldsCustomField1, bool) {
 	if o == nil || IsNil(o.CustomField2) {
 		return nil, false
 	}
@@ -529,15 +529,15 @@ func (o *PaylinkFields) HasCustomField2() bool {
 	return false
 }
 
-// SetCustomField2 gets a reference to the given GatewayFieldsDateOfBirth and assigns it to the CustomField2 field.
-func (o *PaylinkFields) SetCustomField2(v GatewayFieldsDateOfBirth) {
+// SetCustomField2 gets a reference to the given PaylinkFieldsCustomField1 and assigns it to the CustomField2 field.
+func (o *PaylinkFields) SetCustomField2(v PaylinkFieldsCustomField1) {
 	o.CustomField2 = &v
 }
 
 // GetCustomField3 returns the CustomField3 field value if set, zero value otherwise.
-func (o *PaylinkFields) GetCustomField3() GatewayFieldsDateOfBirth {
+func (o *PaylinkFields) GetCustomField3() PaylinkFieldsCustomField1 {
 	if o == nil || IsNil(o.CustomField3) {
-		var ret GatewayFieldsDateOfBirth
+		var ret PaylinkFieldsCustomField1
 		return ret
 	}
 	return *o.CustomField3
@@ -545,7 +545,7 @@ func (o *PaylinkFields) GetCustomField3() GatewayFieldsDateOfBirth {
 
 // GetCustomField3Ok returns a tuple with the CustomField3 field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *PaylinkFields) GetCustomField3Ok() (*GatewayFieldsDateOfBirth, bool) {
+func (o *PaylinkFields) GetCustomField3Ok() (*PaylinkFieldsCustomField1, bool) {
 	if o == nil || IsNil(o.CustomField3) {
 		return nil, false
 	}
@@ -561,8 +561,8 @@ func (o *PaylinkFields) HasCustomField3() bool {
 	return false
 }
 
-// SetCustomField3 gets a reference to the given GatewayFieldsDateOfBirth and assigns it to the CustomField3 field.
-func (o *PaylinkFields) SetCustomField3(v GatewayFieldsDateOfBirth) {
+// SetCustomField3 gets a reference to the given PaylinkFieldsCustomField1 and assigns it to the CustomField3 field.
+func (o *PaylinkFields) SetCustomField3(v PaylinkFieldsCustomField1) {
 	o.CustomField3 = &v
 }
 

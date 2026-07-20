@@ -14,21 +14,21 @@ import (
 	"encoding/json"
 )
 
-// checks if the GatewayFieldsTitle type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &GatewayFieldsTitle{}
+// checks if the PaylinkFieldsTitle type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PaylinkFieldsTitle{}
 
-// GatewayFieldsTitle struct for GatewayFieldsTitle
-type GatewayFieldsTitle struct {
+// PaylinkFieldsTitle struct for PaylinkFieldsTitle
+type PaylinkFieldsTitle struct {
 	Active    *bool `json:"active,omitempty"`
 	Mandatory *bool `json:"mandatory,omitempty"`
 }
 
-// NewGatewayFieldsTitle instantiates a new GatewayFieldsTitle object
+// NewPaylinkFieldsTitle instantiates a new PaylinkFieldsTitle object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGatewayFieldsTitle() *GatewayFieldsTitle {
-	this := GatewayFieldsTitle{}
+func NewPaylinkFieldsTitle() *PaylinkFieldsTitle {
+	this := PaylinkFieldsTitle{}
 	var active bool = true
 	this.Active = &active
 	var mandatory bool = true
@@ -36,11 +36,11 @@ func NewGatewayFieldsTitle() *GatewayFieldsTitle {
 	return &this
 }
 
-// NewGatewayFieldsTitleWithDefaults instantiates a new GatewayFieldsTitle object
+// NewPaylinkFieldsTitleWithDefaults instantiates a new PaylinkFieldsTitle object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewGatewayFieldsTitleWithDefaults() *GatewayFieldsTitle {
-	this := GatewayFieldsTitle{}
+func NewPaylinkFieldsTitleWithDefaults() *PaylinkFieldsTitle {
+	this := PaylinkFieldsTitle{}
 	var active bool = true
 	this.Active = &active
 	var mandatory bool = true
@@ -49,7 +49,7 @@ func NewGatewayFieldsTitleWithDefaults() *GatewayFieldsTitle {
 }
 
 // GetActive returns the Active field value if set, zero value otherwise.
-func (o *GatewayFieldsTitle) GetActive() bool {
+func (o *PaylinkFieldsTitle) GetActive() bool {
 	if o == nil || IsNil(o.Active) {
 		var ret bool
 		return ret
@@ -59,7 +59,7 @@ func (o *GatewayFieldsTitle) GetActive() bool {
 
 // GetActiveOk returns a tuple with the Active field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsTitle) GetActiveOk() (*bool, bool) {
+func (o *PaylinkFieldsTitle) GetActiveOk() (*bool, bool) {
 	if o == nil || IsNil(o.Active) {
 		return nil, false
 	}
@@ -67,7 +67,7 @@ func (o *GatewayFieldsTitle) GetActiveOk() (*bool, bool) {
 }
 
 // HasActive returns a boolean if a field has been set.
-func (o *GatewayFieldsTitle) HasActive() bool {
+func (o *PaylinkFieldsTitle) HasActive() bool {
 	if o != nil && !IsNil(o.Active) {
 		return true
 	}
@@ -76,12 +76,12 @@ func (o *GatewayFieldsTitle) HasActive() bool {
 }
 
 // SetActive gets a reference to the given bool and assigns it to the Active field.
-func (o *GatewayFieldsTitle) SetActive(v bool) {
+func (o *PaylinkFieldsTitle) SetActive(v bool) {
 	o.Active = &v
 }
 
 // GetMandatory returns the Mandatory field value if set, zero value otherwise.
-func (o *GatewayFieldsTitle) GetMandatory() bool {
+func (o *PaylinkFieldsTitle) GetMandatory() bool {
 	if o == nil || IsNil(o.Mandatory) {
 		var ret bool
 		return ret
@@ -91,7 +91,7 @@ func (o *GatewayFieldsTitle) GetMandatory() bool {
 
 // GetMandatoryOk returns a tuple with the Mandatory field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsTitle) GetMandatoryOk() (*bool, bool) {
+func (o *PaylinkFieldsTitle) GetMandatoryOk() (*bool, bool) {
 	if o == nil || IsNil(o.Mandatory) {
 		return nil, false
 	}
@@ -99,7 +99,7 @@ func (o *GatewayFieldsTitle) GetMandatoryOk() (*bool, bool) {
 }
 
 // HasMandatory returns a boolean if a field has been set.
-func (o *GatewayFieldsTitle) HasMandatory() bool {
+func (o *PaylinkFieldsTitle) HasMandatory() bool {
 	if o != nil && !IsNil(o.Mandatory) {
 		return true
 	}
@@ -108,11 +108,11 @@ func (o *GatewayFieldsTitle) HasMandatory() bool {
 }
 
 // SetMandatory gets a reference to the given bool and assigns it to the Mandatory field.
-func (o *GatewayFieldsTitle) SetMandatory(v bool) {
+func (o *PaylinkFieldsTitle) SetMandatory(v bool) {
 	o.Mandatory = &v
 }
 
-func (o GatewayFieldsTitle) MarshalJSON() ([]byte, error) {
+func (o PaylinkFieldsTitle) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -120,7 +120,7 @@ func (o GatewayFieldsTitle) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o GatewayFieldsTitle) ToMap() (map[string]interface{}, error) {
+func (o PaylinkFieldsTitle) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Active) {
 		toSerialize["active"] = o.Active
@@ -131,38 +131,38 @@ func (o GatewayFieldsTitle) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableGatewayFieldsTitle struct {
-	value *GatewayFieldsTitle
+type NullablePaylinkFieldsTitle struct {
+	value *PaylinkFieldsTitle
 	isSet bool
 }
 
-func (v NullableGatewayFieldsTitle) Get() *GatewayFieldsTitle {
+func (v NullablePaylinkFieldsTitle) Get() *PaylinkFieldsTitle {
 	return v.value
 }
 
-func (v *NullableGatewayFieldsTitle) Set(val *GatewayFieldsTitle) {
+func (v *NullablePaylinkFieldsTitle) Set(val *PaylinkFieldsTitle) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableGatewayFieldsTitle) IsSet() bool {
+func (v NullablePaylinkFieldsTitle) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableGatewayFieldsTitle) Unset() {
+func (v *NullablePaylinkFieldsTitle) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableGatewayFieldsTitle(val *GatewayFieldsTitle) *NullableGatewayFieldsTitle {
-	return &NullableGatewayFieldsTitle{value: val, isSet: true}
+func NewNullablePaylinkFieldsTitle(val *PaylinkFieldsTitle) *NullablePaylinkFieldsTitle {
+	return &NullablePaylinkFieldsTitle{value: val, isSet: true}
 }
 
-func (v NullableGatewayFieldsTitle) MarshalJSON() ([]byte, error) {
+func (v NullablePaylinkFieldsTitle) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableGatewayFieldsTitle) UnmarshalJSON(src []byte) error {
+func (v *NullablePaylinkFieldsTitle) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }

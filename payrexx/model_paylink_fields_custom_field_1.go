@@ -14,22 +14,22 @@ import (
 	"encoding/json"
 )
 
-// checks if the GatewayFieldsDateOfBirth type satisfies the MappedNullable interface at compile time
-var _ MappedNullable = &GatewayFieldsDateOfBirth{}
+// checks if the PaylinkFieldsCustomField1 type satisfies the MappedNullable interface at compile time
+var _ MappedNullable = &PaylinkFieldsCustomField1{}
 
-// GatewayFieldsDateOfBirth struct for GatewayFieldsDateOfBirth
-type GatewayFieldsDateOfBirth struct {
-	Active    *bool                          `json:"active,omitempty"`
-	Mandatory *bool                          `json:"mandatory,omitempty"`
-	Names     *GatewayFieldsDateOfBirthNames `json:"names,omitempty"`
+// PaylinkFieldsCustomField1 struct for PaylinkFieldsCustomField1
+type PaylinkFieldsCustomField1 struct {
+	Active    *bool                           `json:"active,omitempty"`
+	Mandatory *bool                           `json:"mandatory,omitempty"`
+	Names     *PaylinkFieldsCustomField1Names `json:"names,omitempty"`
 }
 
-// NewGatewayFieldsDateOfBirth instantiates a new GatewayFieldsDateOfBirth object
+// NewPaylinkFieldsCustomField1 instantiates a new PaylinkFieldsCustomField1 object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewGatewayFieldsDateOfBirth() *GatewayFieldsDateOfBirth {
-	this := GatewayFieldsDateOfBirth{}
+func NewPaylinkFieldsCustomField1() *PaylinkFieldsCustomField1 {
+	this := PaylinkFieldsCustomField1{}
 	var active bool = true
 	this.Active = &active
 	var mandatory bool = true
@@ -37,11 +37,11 @@ func NewGatewayFieldsDateOfBirth() *GatewayFieldsDateOfBirth {
 	return &this
 }
 
-// NewGatewayFieldsDateOfBirthWithDefaults instantiates a new GatewayFieldsDateOfBirth object
+// NewPaylinkFieldsCustomField1WithDefaults instantiates a new PaylinkFieldsCustomField1 object
 // This constructor will only assign default values to properties that have it defined,
 // but it doesn't guarantee that properties required by API are set
-func NewGatewayFieldsDateOfBirthWithDefaults() *GatewayFieldsDateOfBirth {
-	this := GatewayFieldsDateOfBirth{}
+func NewPaylinkFieldsCustomField1WithDefaults() *PaylinkFieldsCustomField1 {
+	this := PaylinkFieldsCustomField1{}
 	var active bool = true
 	this.Active = &active
 	var mandatory bool = true
@@ -50,7 +50,7 @@ func NewGatewayFieldsDateOfBirthWithDefaults() *GatewayFieldsDateOfBirth {
 }
 
 // GetActive returns the Active field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirth) GetActive() bool {
+func (o *PaylinkFieldsCustomField1) GetActive() bool {
 	if o == nil || IsNil(o.Active) {
 		var ret bool
 		return ret
@@ -60,7 +60,7 @@ func (o *GatewayFieldsDateOfBirth) GetActive() bool {
 
 // GetActiveOk returns a tuple with the Active field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirth) GetActiveOk() (*bool, bool) {
+func (o *PaylinkFieldsCustomField1) GetActiveOk() (*bool, bool) {
 	if o == nil || IsNil(o.Active) {
 		return nil, false
 	}
@@ -68,7 +68,7 @@ func (o *GatewayFieldsDateOfBirth) GetActiveOk() (*bool, bool) {
 }
 
 // HasActive returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirth) HasActive() bool {
+func (o *PaylinkFieldsCustomField1) HasActive() bool {
 	if o != nil && !IsNil(o.Active) {
 		return true
 	}
@@ -77,12 +77,12 @@ func (o *GatewayFieldsDateOfBirth) HasActive() bool {
 }
 
 // SetActive gets a reference to the given bool and assigns it to the Active field.
-func (o *GatewayFieldsDateOfBirth) SetActive(v bool) {
+func (o *PaylinkFieldsCustomField1) SetActive(v bool) {
 	o.Active = &v
 }
 
 // GetMandatory returns the Mandatory field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirth) GetMandatory() bool {
+func (o *PaylinkFieldsCustomField1) GetMandatory() bool {
 	if o == nil || IsNil(o.Mandatory) {
 		var ret bool
 		return ret
@@ -92,7 +92,7 @@ func (o *GatewayFieldsDateOfBirth) GetMandatory() bool {
 
 // GetMandatoryOk returns a tuple with the Mandatory field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirth) GetMandatoryOk() (*bool, bool) {
+func (o *PaylinkFieldsCustomField1) GetMandatoryOk() (*bool, bool) {
 	if o == nil || IsNil(o.Mandatory) {
 		return nil, false
 	}
@@ -100,7 +100,7 @@ func (o *GatewayFieldsDateOfBirth) GetMandatoryOk() (*bool, bool) {
 }
 
 // HasMandatory returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirth) HasMandatory() bool {
+func (o *PaylinkFieldsCustomField1) HasMandatory() bool {
 	if o != nil && !IsNil(o.Mandatory) {
 		return true
 	}
@@ -109,14 +109,14 @@ func (o *GatewayFieldsDateOfBirth) HasMandatory() bool {
 }
 
 // SetMandatory gets a reference to the given bool and assigns it to the Mandatory field.
-func (o *GatewayFieldsDateOfBirth) SetMandatory(v bool) {
+func (o *PaylinkFieldsCustomField1) SetMandatory(v bool) {
 	o.Mandatory = &v
 }
 
 // GetNames returns the Names field value if set, zero value otherwise.
-func (o *GatewayFieldsDateOfBirth) GetNames() GatewayFieldsDateOfBirthNames {
+func (o *PaylinkFieldsCustomField1) GetNames() PaylinkFieldsCustomField1Names {
 	if o == nil || IsNil(o.Names) {
-		var ret GatewayFieldsDateOfBirthNames
+		var ret PaylinkFieldsCustomField1Names
 		return ret
 	}
 	return *o.Names
@@ -124,7 +124,7 @@ func (o *GatewayFieldsDateOfBirth) GetNames() GatewayFieldsDateOfBirthNames {
 
 // GetNamesOk returns a tuple with the Names field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *GatewayFieldsDateOfBirth) GetNamesOk() (*GatewayFieldsDateOfBirthNames, bool) {
+func (o *PaylinkFieldsCustomField1) GetNamesOk() (*PaylinkFieldsCustomField1Names, bool) {
 	if o == nil || IsNil(o.Names) {
 		return nil, false
 	}
@@ -132,7 +132,7 @@ func (o *GatewayFieldsDateOfBirth) GetNamesOk() (*GatewayFieldsDateOfBirthNames,
 }
 
 // HasNames returns a boolean if a field has been set.
-func (o *GatewayFieldsDateOfBirth) HasNames() bool {
+func (o *PaylinkFieldsCustomField1) HasNames() bool {
 	if o != nil && !IsNil(o.Names) {
 		return true
 	}
@@ -140,12 +140,12 @@ func (o *GatewayFieldsDateOfBirth) HasNames() bool {
 	return false
 }
 
-// SetNames gets a reference to the given GatewayFieldsDateOfBirthNames and assigns it to the Names field.
-func (o *GatewayFieldsDateOfBirth) SetNames(v GatewayFieldsDateOfBirthNames) {
+// SetNames gets a reference to the given PaylinkFieldsCustomField1Names and assigns it to the Names field.
+func (o *PaylinkFieldsCustomField1) SetNames(v PaylinkFieldsCustomField1Names) {
 	o.Names = &v
 }
 
-func (o GatewayFieldsDateOfBirth) MarshalJSON() ([]byte, error) {
+func (o PaylinkFieldsCustomField1) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
@@ -153,7 +153,7 @@ func (o GatewayFieldsDateOfBirth) MarshalJSON() ([]byte, error) {
 	return json.Marshal(toSerialize)
 }
 
-func (o GatewayFieldsDateOfBirth) ToMap() (map[string]interface{}, error) {
+func (o PaylinkFieldsCustomField1) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.Active) {
 		toSerialize["active"] = o.Active
@@ -167,38 +167,38 @@ func (o GatewayFieldsDateOfBirth) ToMap() (map[string]interface{}, error) {
 	return toSerialize, nil
 }
 
-type NullableGatewayFieldsDateOfBirth struct {
-	value *GatewayFieldsDateOfBirth
+type NullablePaylinkFieldsCustomField1 struct {
+	value *PaylinkFieldsCustomField1
 	isSet bool
 }
 
-func (v NullableGatewayFieldsDateOfBirth) Get() *GatewayFieldsDateOfBirth {
+func (v NullablePaylinkFieldsCustomField1) Get() *PaylinkFieldsCustomField1 {
 	return v.value
 }
 
-func (v *NullableGatewayFieldsDateOfBirth) Set(val *GatewayFieldsDateOfBirth) {
+func (v *NullablePaylinkFieldsCustomField1) Set(val *PaylinkFieldsCustomField1) {
 	v.value = val
 	v.isSet = true
 }
 
-func (v NullableGatewayFieldsDateOfBirth) IsSet() bool {
+func (v NullablePaylinkFieldsCustomField1) IsSet() bool {
 	return v.isSet
 }
 
-func (v *NullableGatewayFieldsDateOfBirth) Unset() {
+func (v *NullablePaylinkFieldsCustomField1) Unset() {
 	v.value = nil
 	v.isSet = false
 }
 
-func NewNullableGatewayFieldsDateOfBirth(val *GatewayFieldsDateOfBirth) *NullableGatewayFieldsDateOfBirth {
-	return &NullableGatewayFieldsDateOfBirth{value: val, isSet: true}
+func NewNullablePaylinkFieldsCustomField1(val *PaylinkFieldsCustomField1) *NullablePaylinkFieldsCustomField1 {
+	return &NullablePaylinkFieldsCustomField1{value: val, isSet: true}
 }
 
-func (v NullableGatewayFieldsDateOfBirth) MarshalJSON() ([]byte, error) {
+func (v NullablePaylinkFieldsCustomField1) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.value)
 }
 
-func (v *NullableGatewayFieldsDateOfBirth) UnmarshalJSON(src []byte) error {
+func (v *NullablePaylinkFieldsCustomField1) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
