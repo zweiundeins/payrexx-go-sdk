@@ -1,6 +1,15 @@
 # payrexx-go-sdk
 
+[![CI](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/ci.yml)
+[![Upstream watch](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/upstream-watch.yml/badge.svg)](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/upstream-watch.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/zweiundeins/payrexx-go-sdk/payrexx.svg)](https://pkg.go.dev/github.com/zweiundeins/payrexx-go-sdk/payrexx)
+[![Go Report Card](https://goreportcard.com/badge/github.com/zweiundeins/payrexx-go-sdk)](https://goreportcard.com/report/github.com/zweiundeins/payrexx-go-sdk)
+
 A Go client for the [Payrexx](https://payrexx.com) REST API.
+
+The second badge is the one that matters: it is green when this client was last
+confirmed against the live Payrexx API, which is a stronger claim than a passing
+unit test. See [Continuous verification](#continuous-verification).
 
 Payrexx publishes an official SDK for PHP and community ones for Node and C#, but
 **not Go**, and — unlike most payment providers — no OpenAPI document either. This
@@ -249,22 +258,11 @@ deliveries.
 ### Live tests
 
 The offline suite proves this package is self-consistent. It cannot prove the
-assembled spec matches the API Payrexx actually serves — and that spec is built
-from documentation already known to be wrong in places. That is what the live
-tests are for:
-
-```sh
-PAYREXX_LIVE_TEST=1 \
-PAYREXX_INSTANCE=example \
-PAYREXX_API_SECRET=... \
-go test -run TestLive -v ./...
-```
-
-They skip without `PAYREXX_LIVE_TEST`, so `go test ./...` stays offline, and CI
-runs them from [`upstream-watch.yml`](.github/workflows/upstream-watch.yml)
-rather than on pull requests. They create gateways — hosted checkout pages, no
-money moves, nothing is charged — and delete them again in a `t.Cleanup`. Nothing
-else is written.
+assembled spec matches the API Payrexx actually serves, and that spec is built
+from documentation already known to be wrong in places. A separate suite calls
+the real API to close that gap; it skips unless `PAYREXX_LIVE_TEST` is set, so
+`go test ./...` stays offline and credential-free. Running it is described in
+[CONTRIBUTING.md](CONTRIBUTING.md#running-the-live-tests).
 
 Three defects were found this way and are fixed in the code above:
 
@@ -281,95 +279,53 @@ Three defects were found this way and are fixed in the code above:
 `Gateway.language` and `Gateway.requestId` are returned but documented nowhere;
 they are in the model with that noted.
 
-## CI
+## Continuous verification
 
-The split matters, so it is worth stating: **nothing that runs on a pull request
-talks to Payrexx.** A Payrexx outage or a documentation edit can never block a
-merge.
+This client is generated from a specification assembled out of documentation that
+is demonstrably wrong in several places, and corrected by a script whose every
+entry is a claim about how Payrexx really behaves. "It compiles" is therefore not
+much of a guarantee on its own, and two things run on top of it.
 
-[`ci.yml`](.github/workflows/ci.yml) — on every push and PR, entirely offline:
-gofmt, vet, build and `go test -race` on Go 1.23 and stable, plus a check that
-`./gen.sh` against the committed `openapi.json` reproduces the committed client
-byte for byte. That last one is what stops a hand-edit to a generated file from
-surviving review and then silently vanishing at the next regeneration.
+[`ci.yml`](.github/workflows/ci.yml) runs on every push and pull request and
+never contacts Payrexx: gofmt, vet, build and `go test -race` on Go 1.23 and
+current, plus a check that regenerating from the committed `openapi.json`
+reproduces the committed client byte for byte. Because it is fully offline, a
+Payrexx outage cannot turn a pull request red.
 
-[`upstream-watch.yml`](.github/workflows/upstream-watch.yml) — Mondays 06:00 UTC
-and on demand. Rebuilds the spec from developers.payrexx.com and diffs it against
-the committed one, then runs the live tests. Both steps run even if the first
-fails, and the job goes red if either does. This is the half that can break
-without anyone committing anything: every correction in `build_spec.py` is a
-claim about an API whose published schema is already wrong in places.
+[`upstream-watch.yml`](.github/workflows/upstream-watch.yml) runs every Monday
+against a real Payrexx account. It rebuilds the specification from
+developers.payrexx.com and diffs it against the committed one, then runs the live
+tests: a gateway created, read back and deleted, the read endpoints, both
+authentication schemes, and the shape of an error response. This is the half that
+can break without anyone committing anything, and it is what falsifies a
+correction in `build_spec.py` once it stops holding.
 
-**On failure it opens an issue** titled *Upstream watch failed*, with the spec
-diff or the failing test output in the body, and comments on the existing issue
-rather than filing a duplicate. That indirection is deliberate — GitHub's own
-notification for a scheduled workflow reaches exactly one person ("Notifications
-for scheduled workflows are sent to the user who initially created the workflow",
-reassigned to whoever last edits the `cron:` line), at whatever address that
-account uses, only if their Actions notification preference is on. An issue is
-visible to everyone with repository access and survives people leaving.
+### How to tell whether this SDK is currently accurate
 
-Two repository secrets are required, or the live step fails loudly rather than
-silently skipping: `PAYREXX_INSTANCE` and `PAYREXX_API_SECRET`.
+**A failing watch opens an issue** titled *Upstream watch failed*, carrying the
+specification diff or the failing test output, and comments on that issue instead
+of filing duplicates. So:
 
-### Which account to point them at
+- [Open issues](https://github.com/zweiundeins/payrexx-go-sdk/issues?q=is%3Aissue+is%3Aopen+%22Upstream+watch+failed%22)
+  with that title mean Payrexx has changed something and this SDK has not caught
+  up yet. Read the diff before trusting the affected models.
+- [Actions history](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/upstream-watch.yml)
+  shows how recently the client was confirmed against the live API. A green run
+  means the models decoded real responses that week.
 
-**Use a Payrexx account that holds no customer data — ideally one created for
-this.** Payrexx has no sandbox: test mode is a per-PSP toggle inside a real
-account, and their own testing guide says a trial subscription is enough, so "a
-test instance" means a second real account.
+An issue is used rather than an email because GitHub notifies a scheduled
+workflow's failure to a single account, the one that last edited its `cron:`
+line. The issue tracker is visible to everyone and outlives whoever set it up.
 
-Per weekly run the tests make about eight API calls, create one gateway at
-CHF 1.00 and delete it again. Nothing is charged and no money moves. The reads
-are reads. That part is harmless on any account.
+Failure output never contains a response body. The live tests read a real
+account, and the failure they exist to catch is a decode failure, so a verbatim
+dump would put customer records into a public log at precisely the wrong moment.
+Values are replaced by their types, which is also the more useful artefact when
+the disagreement is about a field's type. `TestShapeRedactsCustomerData` runs
+offline on every push and fails if that stops being true.
 
-What is not harmless is the credential and the data behind it:
-
-- **The API secret is full account access.** It can read every transaction,
-  invoice and contact, create and delete gateways, and cancel subscriptions.
-  Putting an active client's production secret into a public repository's secrets
-  gives that blast radius to anyone who can push a workflow change.
-- **The tests read real records.** `TestLiveListsDecode` lists transactions,
-  subscriptions and invoices. On a production account those carry names, email
-  and postal addresses, phone numbers and masked card numbers.
-
-The second point had teeth: the failure these tests exist to catch *is* a decode
-failure, so the one moment a response body would be printed is the moment it
-holds a populated customer record — and that output goes to a public Actions log
-and into the issue this workflow files. The tests therefore never print a body.
-`shape()` replaces every value with its type, keeping the keys and the top-level
-error envelope, which is also the more useful artefact: a decode failure is a
-disagreement about a field's *type*. `TestShapeRedactsCustomerData` runs offline
-on every push and fails if that ever stops being true.
-
-That makes a production account survivable rather than advisable. The ranking:
-
-1. **A dedicated Payrexx account** for CI. No customer data to leak, and a
-   secret worth nothing if exposed.
-2. **The project's own account**, before it has customers. Fine, and it has the
-   advantage of testing the instance you will actually ship against.
-3. **An unrelated active project's credentials.** Works, but you are handing a
-   public repository a key that can cancel that project's subscriptions, to test
-   an SDK that project does not use.
-
-The workflow triggers on `schedule` and `workflow_dispatch` only — never
-`pull_request` or `pull_request_target` — so a fork cannot run it and cannot
-reach the secrets.
-
-### The keepalive commit
-
-Public repositories have their scheduled workflows *"automatically disabled when
-no repository activity has occurred in 60 days"* — and an SDK that is working
-correctly is exactly a repository with no activity, so this watch would switch
-itself off precisely while it was doing its job. Workflow runs do not count as
-activity; commits do. So after a clean run, if the last commit is more than 45
-days old, the workflow writes the date into `.github/spec-last-verified` and
-pushes it. At most one commit every seven weeks, and none at all while anyone is
-working on the repo.
-
-It needs `contents: write` and push access to the default branch. If you protect
-that branch, either exempt `github-actions[bot]` or drop the step and re-enable
-the schedule by hand when GitHub emails about it.
+Running the watch, and the account it needs, are covered in
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
