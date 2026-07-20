@@ -109,7 +109,7 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           TITLE: 'Upstream watch failed'
         run: |
-          echo "[Workflow run]($RUN_URL) · $(date -u +%Y-%m-%dT%H:%MZ)" >> /tmp/report.md
+          echo "[Workflow run]($RUN_URL) at $(date -u +%Y-%m-%dT%H:%MZ)" >> /tmp/report.md
 
           # Reuse the open issue if there is one: nine quiet weeks of the same
           # drift should be one thread, not nine issues.
