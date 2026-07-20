@@ -3,7 +3,6 @@
 [![CI](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/ci.yml)
 [![Upstream watch](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/upstream-watch.yml/badge.svg)](https://github.com/zweiundeins/payrexx-go-sdk/actions/workflows/upstream-watch.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/zweiundeins/payrexx-go-sdk/payrexx.svg)](https://pkg.go.dev/github.com/zweiundeins/payrexx-go-sdk/payrexx)
-[![Go Report Card](https://goreportcard.com/badge/github.com/zweiundeins/payrexx-go-sdk)](https://goreportcard.com/report/github.com/zweiundeins/payrexx-go-sdk)
 
 A Go client for the [Payrexx](https://payrexx.com) REST API.
 
