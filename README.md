@@ -328,7 +328,10 @@ Running the watch, and the account it needs, are covered in
 
 ## License
 
-The generated client mirrors Payrexx's published API definition; the generated
-portions follow openapi-generator's Apache-2.0 output licensing. The hand-written
-`auth.go`, `webhook.go` and `scripts/build_spec.py` are part of this repository.
-This is not an official Payrexx product.
+[MIT](LICENSE).
+
+openapi-generator places no licensing condition on the code it emits, so the
+generated client is covered by the same terms as the hand-written `auth.go`,
+`webhook.go` and `scripts/build_spec.py`. The assembled `openapi.json` carries
+field descriptions taken from Payrexx's public documentation, which remain
+Payrexx's own. This is an independent client, not an official Payrexx product.
