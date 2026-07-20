@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Floor from go.mod plus the current release.
+        go: ['1.23', 'stable']
+    name: build & test (Go ${{ matrix.go }})
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: gofmt
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::these files are not gofmt-clean:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: go vet
+        run: go vet ./...
+
+      - name: go build
+        run: go build ./...
+
+      - name: go test
+        run: go test -race ./...
+
+  spec:
+    runs-on: ubuntu-latest
+    name: spec is reproducible
+    steps:
+      - uses: actions/checkout@v5
+
+      # The committed openapi.json is the input to every generation, so it has to
+      # be exactly what build_spec.py produces from the committed inputs. This
+      # rebuilds it from upstream and fails on any difference — which is the
+      # signal that Payrexx changed something, not that the repo is broken.
+      # Allowed to fail: it depends on developers.payrexx.com being reachable.
+      - name: rebuild openapi.json from upstream
+        continue-on-error: true
+        run: |
+          python3 scripts/build_spec.py -o /tmp/openapi.json
+          diff -u openapi.json /tmp/openapi.json || {
+            echo "::warning::upstream spec has drifted; run ./gen.sh --refresh-spec"
+            exit 1
+          }

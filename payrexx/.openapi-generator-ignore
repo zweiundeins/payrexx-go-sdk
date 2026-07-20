@@ -1,0 +1,24 @@
+# OpenAPI Generator Ignore
+#
+# Files listed here are never overwritten by `gen.sh`. Patterns follow .gitignore
+# syntax; `!` negates.
+
+# --- keep the generated surface dependency-free ---
+# The stub tests only assert that a method exists, and pull in testify to do it.
+# Real tests are hand-written next to the code they cover.
+test/
+# Scaffolding this repo does not use.
+git_push.sh
+.travis.yml
+# The real README lives at the module root; do not let the generator drop one here.
+README.md
+# Redundant with the root .gitignore.
+.gitignore
+
+# --- hand-written; the generator must never touch these ---
+auth.go
+auth_test.go
+webhook.go
+webhook_test.go
+example_test.go
+integration_test.go
