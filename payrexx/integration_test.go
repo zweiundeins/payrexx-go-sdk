@@ -2,8 +2,12 @@ package payrexx_test
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"strings"
 	"testing"
@@ -67,7 +71,7 @@ func TestLiveGatewayRoundTrip(t *testing.T) {
 	created, resp, err := client.GatewayAPI.GatewayCreate(ctx).
 		GatewayCreateRequest(*req).Execute()
 	if err != nil {
-		t.Fatalf("GatewayCreate: %v%s", err, body(err))
+		t.Fatalf("GatewayCreate: %v%s", err, shape(err))
 	}
 	if resp.StatusCode != http.StatusOK {
 		t.Fatalf("GatewayCreate: HTTP %d", resp.StatusCode)
@@ -83,7 +87,7 @@ func TestLiveGatewayRoundTrip(t *testing.T) {
 	// Whatever else happens, do not leave the gateway behind.
 	t.Cleanup(func() {
 		if _, _, err := client.GatewayAPI.GatewayDelete(context.Background(), id).Execute(); err != nil {
-			t.Errorf("GatewayDelete(%d): %v%s", id, err, body(err))
+			t.Errorf("GatewayDelete(%d): %v%s", id, err, shape(err))
 		}
 	})
 
@@ -113,7 +117,7 @@ func TestLiveGatewayRoundTrip(t *testing.T) {
 
 	read, _, err := client.GatewayAPI.GatewayRetrieve(ctx, id).Execute()
 	if err != nil {
-		t.Fatalf("GatewayRetrieve(%d): %v%s", id, err, body(err))
+		t.Fatalf("GatewayRetrieve(%d): %v%s", id, err, shape(err))
 	}
 	if len(read.Data) != 1 {
 		t.Fatalf("GatewayRetrieve returned %d gateways, want 1", len(read.Data))
@@ -139,7 +143,7 @@ func TestLiveListsDecode(t *testing.T) {
 		// Subscription; if that is wrong, this call fails to decode.
 		got, _, err := client.SubscriptionAPI.SubscriptionList(ctx).Execute()
 		if err != nil {
-			t.Fatalf("SubscriptionList: %v%s", err, body(err))
+			t.Fatalf("SubscriptionList: %v%s", err, shape(err))
 		}
 		if payrexx.Value(got.Status) != "success" {
 			t.Errorf("status = %q, want success", payrexx.Value(got.Status))
@@ -149,7 +153,7 @@ func TestLiveListsDecode(t *testing.T) {
 	t.Run("transactions", func(t *testing.T) {
 		got, _, err := client.TransactionAPI.TransactionList(ctx).Execute()
 		if err != nil {
-			t.Fatalf("TransactionList: %v%s", err, body(err))
+			t.Fatalf("TransactionList: %v%s", err, shape(err))
 		}
 		if payrexx.Value(got.Status) != "success" {
 			t.Errorf("status = %q, want success", payrexx.Value(got.Status))
@@ -162,7 +166,7 @@ func TestLiveListsDecode(t *testing.T) {
 		// isList/is_list typo lived.
 		got, _, err := client.BillAPI.BillList(ctx).Execute()
 		if err != nil {
-			t.Fatalf("BillList: %v%s", err, body(err))
+			t.Fatalf("BillList: %v%s", err, shape(err))
 		}
 		if payrexx.Value(got.Status) != "success" {
 			t.Errorf("status = %q, want success", payrexx.Value(got.Status))
@@ -174,7 +178,7 @@ func TestLiveListsDecode(t *testing.T) {
 
 	t.Run("payouts", func(t *testing.T) {
 		if _, _, err := client.PayoutAPI.PayoutList(ctx).Execute(); err != nil {
-			t.Fatalf("PayoutList: %v%s", err, body(err))
+			t.Fatalf("PayoutList: %v%s", err, shape(err))
 		}
 	})
 }
@@ -190,9 +194,9 @@ func TestLiveSignatureScheme(t *testing.T) {
 	if err != nil {
 		if resp != nil && (resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden) {
 			t.Fatalf("AuthSignature was rejected with HTTP %d -- the scheme may be "+
-				"retired; use AuthAPIKey and say so in the README%s", resp.StatusCode, body(err))
+				"retired; use AuthAPIKey and say so in the README%s", resp.StatusCode, shape(err))
 		}
-		t.Fatalf("TransactionList under AuthSignature: %v%s", err, body(err))
+		t.Fatalf("TransactionList under AuthSignature: %v%s", err, shape(err))
 	}
 }
 
@@ -226,12 +230,131 @@ func TestLiveErrorShape(t *testing.T) {
 	}
 }
 
-// body renders an API error's response body, which is where Payrexx puts the
-// reason a call failed.
-func body(err error) string {
-	var apiErr *payrexx.GenericOpenAPIError
-	if errors.As(err, &apiErr) && len(apiErr.Body()) > 0 {
-		return "\n  body: " + string(apiErr.Body())
+// TestShapeRedactsCustomerData runs offline. It guards the one thing that turns
+// a diagnostic into a data breach: these tests read a real account, their output
+// reaches a public Actions log and a public issue, and the failure they exist to
+// catch is a decode failure — so the moment the body would be printed is the
+// moment it holds a populated customer record.
+func TestShapeRedactsCustomerData(t *testing.T) {
+	// A transaction list as a real account answers it, with `amount` as a string
+	// so the generated model fails to decode — the exact shape of the two
+	// defects the live tests already found.
+	const populated = `{"status":"success","data":[{
+		"id":1234,"uuid":"1122aabb","amount":"5000","status":"confirmed",
+		"contact":{"email":"jane@example.ch","firstname":"Jane","lastname":"Doe",
+		           "street":"Burgstrasse 20","zip":"3600","phone":"+41335500010"},
+		"payment":{"brand":"visa","cardNumber":"424242xxxxxx4242"}}]}`
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		io.WriteString(w, populated)
+	}))
+	defer srv.Close()
+
+	client, err := payrexx.NewClient(payrexx.Config{
+		Instance: "demo", APISecret: "secret", BaseURL: srv.URL,
+	})
+	if err != nil {
+		t.Fatalf("NewClient: %v", err)
 	}
-	return ""
+	_, _, err = client.TransactionAPI.TransactionList(context.Background()).Execute()
+	if err == nil {
+		t.Fatal("the malformed body decoded; this test no longer exercises a decode failure")
+	}
+
+	out := shape(err)
+	for _, secret := range []string{
+		"jane@example.ch", "Jane", "Doe", "Burgstrasse", "3600",
+		"+41335500010", "424242xxxxxx4242", "1122aabb",
+	} {
+		if strings.Contains(out, secret) {
+			t.Errorf("shape() leaked %q:\n%s", secret, out)
+		}
+	}
+	// It still has to be useful: the keys and their types are what identifies
+	// which field disagreed.
+	for _, want := range []string{"cardNumber", "<string>", "<number>", `"status":"success"`} {
+		if !strings.Contains(out, want) {
+			t.Errorf("shape() lost %q, so it cannot diagnose anything:\n%s", want, out)
+		}
+	}
+}
+
+// shape renders an API error's response body with every value replaced by its
+// type.
+//
+// It must never print the body verbatim. These tests read an account's real
+// transactions, subscriptions and invoices, and the failure they exist to catch
+// is a decode failure — so the one moment the body would be printed is the
+// moment it is a populated customer record. That output goes to a public Actions
+// log and into the issue upstream-watch.yml files, so a verbatim dump would
+// publish names, email addresses, postal addresses and masked card numbers.
+//
+// The type map is also the more useful artefact: a decode failure is a
+// disagreement about a field's type, not about its value. The top-level
+// diagnostic fields of Payrexx's error envelope are kept as-is, because
+// "The API secret is not correct" is the whole answer and carries nothing
+// personal.
+func shape(err error) string {
+	var apiErr *payrexx.GenericOpenAPIError
+	if !errors.As(err, &apiErr) || len(apiErr.Body()) == 0 {
+		return ""
+	}
+	var parsed any
+	if json.Unmarshal(apiErr.Body(), &parsed) != nil {
+		return fmt.Sprintf("\n  body: %d bytes, not JSON", len(apiErr.Body()))
+	}
+	if obj, ok := parsed.(map[string]any); ok {
+		for _, k := range []string{"status", "message", "reason"} {
+			if v, ok := obj[k].(string); ok {
+				obj[k] = v
+			}
+		}
+		for k, v := range obj {
+			switch k {
+			case "status", "message", "reason":
+			default:
+				obj[k] = redact(v)
+			}
+		}
+		parsed = obj
+	} else {
+		parsed = redact(parsed)
+	}
+	// json.Marshal would escape the <…> placeholders into <, which makes the
+	// one artefact meant to be read by a human unreadable.
+	var out strings.Builder
+	enc := json.NewEncoder(&out)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(parsed); err != nil {
+		return fmt.Sprintf("\n  shape: unrenderable (%v)", err)
+	}
+	return "\n  shape: " + strings.TrimRight(out.String(), "\n")
+}
+
+// redact replaces every leaf with its type name, keeping the structure. Arrays
+// collapse to their first element's shape plus a count, since ten customer
+// records have the same shape as one.
+func redact(v any) any {
+	switch t := v.(type) {
+	case map[string]any:
+		out := make(map[string]any, len(t))
+		for k, sub := range t {
+			out[k] = redact(sub)
+		}
+		return out
+	case []any:
+		if len(t) == 0 {
+			return []any{}
+		}
+		return []any{redact(t[0]), fmt.Sprintf("<%d items>", len(t))}
+	case string:
+		return "<string>"
+	case float64:
+		return "<number>"
+	case bool:
+		return "<bool>"
+	default:
+		return "<null>"
+	}
 }

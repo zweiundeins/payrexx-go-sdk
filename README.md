@@ -312,6 +312,50 @@ visible to everyone with repository access and survives people leaving.
 Two repository secrets are required, or the live step fails loudly rather than
 silently skipping: `PAYREXX_INSTANCE` and `PAYREXX_API_SECRET`.
 
+### Which account to point them at
+
+**Use a Payrexx account that holds no customer data — ideally one created for
+this.** Payrexx has no sandbox: test mode is a per-PSP toggle inside a real
+account, and their own testing guide says a trial subscription is enough, so "a
+test instance" means a second real account.
+
+Per weekly run the tests make about eight API calls, create one gateway at
+CHF 1.00 and delete it again. Nothing is charged and no money moves. The reads
+are reads. That part is harmless on any account.
+
+What is not harmless is the credential and the data behind it:
+
+- **The API secret is full account access.** It can read every transaction,
+  invoice and contact, create and delete gateways, and cancel subscriptions.
+  Putting an active client's production secret into a public repository's secrets
+  gives that blast radius to anyone who can push a workflow change.
+- **The tests read real records.** `TestLiveListsDecode` lists transactions,
+  subscriptions and invoices. On a production account those carry names, email
+  and postal addresses, phone numbers and masked card numbers.
+
+The second point had teeth: the failure these tests exist to catch *is* a decode
+failure, so the one moment a response body would be printed is the moment it
+holds a populated customer record — and that output goes to a public Actions log
+and into the issue this workflow files. The tests therefore never print a body.
+`shape()` replaces every value with its type, keeping the keys and the top-level
+error envelope, which is also the more useful artefact: a decode failure is a
+disagreement about a field's *type*. `TestShapeRedactsCustomerData` runs offline
+on every push and fails if that ever stops being true.
+
+That makes a production account survivable rather than advisable. The ranking:
+
+1. **A dedicated Payrexx account** for CI. No customer data to leak, and a
+   secret worth nothing if exposed.
+2. **The project's own account**, before it has customers. Fine, and it has the
+   advantage of testing the instance you will actually ship against.
+3. **An unrelated active project's credentials.** Works, but you are handing a
+   public repository a key that can cancel that project's subscriptions, to test
+   an SDK that project does not use.
+
+The workflow triggers on `schedule` and `workflow_dispatch` only — never
+`pull_request` or `pull_request_target` — so a fork cannot run it and cannot
+reach the secrets.
+
 ### The keepalive commit
 
 Public repositories have their scheduled workflows *"automatically disabled when
