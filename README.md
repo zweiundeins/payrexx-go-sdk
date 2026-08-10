@@ -86,7 +86,7 @@ the client appends it. See *Authentication*.
 | `BillAPI` | Invoices in the accounting sense (Payrexx's `/Bill/` resource). |
 | `PayoutAPI` | Payouts, with or without their underlying transfers. |
 | `PaymentProviderAPI` | The PSPs enabled on the instance, and their ids. |
-| `EcrAPI` | POS terminals: pairing and card-present payments. |
+| `EcrAPI` | POS terminals: pairing, configuration, and card-present payments (including void and refund). |
 
 Payrexx's own naming is worth a warning: the documentation pages titled *Invoice*
 describe the `/Bill/` resource (`BillAPI`), while the page titled *Create a
@@ -217,15 +217,16 @@ in that output, not as a silent behaviour change.
 4. **Two missing endpoints.** `DELETE /Subscription/{id}/` (cancel) and
    `DELETE /Gateway/{id}/` are absent from the reference but exercised by
    payrexx-php's own examples. Declared explicitly and marked as such in the spec.
-5. **Polymorphic fields.** `EcrPayment.slip` is an object on some pages and an
-   array on others; typed free-form so both decode.
+5. **Polymorphic fields.** A field two pages type differently is given a
+   free-form schema, so both shapes decode. Currently empty: it held
+   `EcrPayment.slip` until Payrexx's August 2026 ECR rewrite made every page
+   agree on an array of strings.
 6. **Alias spellings.** The Bill pages document `paymentLink` and `payment_link`
-   for the same field (and ECR adds `payment-status` next to `payment_status`).
-   They collide in Go. The camelCase spelling wins, following payrexx-php's
-   `Models\Base::fromArray`, which strips underscores before dispatching to a
-   setter — i.e. Payrexx itself treats camelCase as the model. **If an endpoint
-   really does answer in snake_case, that field decodes as nil.** Only the
-   Bill/Invoice entity is documented both ways.
+   for the same field. They collide in Go. The camelCase spelling wins,
+   following payrexx-php's `Models\Base::fromArray`, which strips underscores
+   before dispatching to a setter: Payrexx itself treats camelCase as the model.
+   **If an endpoint really does answer in snake_case, that field decodes as
+   nil.** Only the Bill/Invoice entity is documented both ways.
 7. **Live corrections.** Where a real response contradicts the published schema,
    the response wins — a model that cannot decode a real answer is worse than a
    slightly less faithful spec. Each entry names the observation it came from.

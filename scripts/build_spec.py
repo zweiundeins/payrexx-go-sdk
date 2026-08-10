@@ -78,12 +78,14 @@ OPERATIONS = {
     ("/Transaction/{id}/", "put"): ("Transaction", "TransactionUpdateContactDetails"),
     ("/Transaction/{id}/cancel", "patch"): ("Transaction", "TransactionCancel"),
     ("/Transaction/{id}/updateTokenization", "patch"): ("Transaction", "TransactionUpdateTokenization"),
+    ("/ecr/{serialNumber}/config", "get"): ("Ecr", "EcrConfigRetrieve"),
     ("/ecr/{serialNumber}/pair", "get"): ("Ecr", "EcrPairingRetrieve"),
     ("/ecr/{serialNumber}/pair", "post"): ("Ecr", "EcrPair"),
     ("/ecr/{serialNumber}/pair", "delete"): ("Ecr", "EcrUnpair"),
     ("/ecr/{serialNumber}/payment", "post"): ("Ecr", "EcrPaymentInitiate"),
     ("/ecr/{serialNumber}/payment/{paymentId}", "get"): ("Ecr", "EcrPaymentRetrieve"),
     ("/ecr/{serialNumber}/payment/{paymentId}/cancel", "post"): ("Ecr", "EcrPaymentCancel"),
+    ("/ecr/{serialNumber}/payment/{paymentId}/refund", "post"): ("Ecr", "EcrPaymentRefund"),
     ("/ecr/{serialNumber}/payment/{paymentId}/void", "post"): ("Ecr", "EcrPaymentVoid"),
     ("/ecr/{serialNumber}/paymentMethods", "get"): ("Ecr", "EcrPaymentMethodList"),
 }
@@ -117,11 +119,13 @@ ENTITIES = {
     ("/Transaction/{id}/", "put"): "Transaction",
     ("/Transaction/{id}/cancel", "patch"): "Transaction",
     ("/Transaction/{id}/updateTokenization", "patch"): "Transaction",
+    ("/ecr/{serialNumber}/config", "get"): "EcrConfig",
     ("/ecr/{serialNumber}/pair", "get"): "EcrPairing",
     ("/ecr/{serialNumber}/pair", "post"): "EcrPairing",
     ("/ecr/{serialNumber}/payment", "post"): "EcrPayment",
     ("/ecr/{serialNumber}/payment/{paymentId}", "get"): "EcrPayment",
     ("/ecr/{serialNumber}/payment/{paymentId}/cancel", "post"): "EcrPayment",
+    ("/ecr/{serialNumber}/payment/{paymentId}/refund", "post"): "EcrPayment",
     ("/ecr/{serialNumber}/payment/{paymentId}/void", "post"): "EcrPayment",
     ("/ecr/{serialNumber}/paymentMethods", "get"): "EcrPaymentMethod",
 }
@@ -213,13 +217,17 @@ SDK_SOURCED = {
 
 
 # 5. Fields the pages type inconsistently, where neither spelling is safe to
-#    pick. ``EcrPayment.slip`` is an object on the initiate/cancel/void pages and
-#    an array on the payment-methods page; a Go struct typed either way fails to
-#    decode the other. Typing them as a free-form schema yields `interface{}`,
-#    which decodes both. Keyed by "<entity>.<dotted property path>".
-POLYMORPHIC = {
-    "EcrPayment.slip": "object on the payment pages, array on the paymentMethods page",
-}
+#    pick: a Go struct typed either way fails to decode the other, so the field is
+#    given a free-form schema, which generates as `interface{}` and decodes both.
+#    Keyed by "<entity>.<dotted property path>".
+#
+#    Empty since Payrexx rewrote the ECR pages in August 2026. The one entry was
+#    ``EcrPayment.slip``, an object on the payment pages against an array
+#    elsewhere; all five pages that carry it now agree on an array of strings, so
+#    it generates as []string and nothing is left to reconcile. An entry that
+#    stops matching is reported rather than dropped silently, so the mechanism
+#    stays wired for the next disagreement.
+POLYMORPHIC = {}
 
 # 6. camelCase vs snake_case twins. The Bill pages document the same entity twice
 #    over: `paymentLink` on the create/update pages, `payment_link` on the
@@ -234,9 +242,10 @@ POLYMORPHIC = {
 #    Consequence worth knowing: if an endpoint really does answer in snake_case,
 #    that field decodes as nil rather than failing. Only the Bill/Invoice entity
 #    is documented both ways.
-#    The ECR pages add a third spelling of the same idea, `payment-status`
-#    alongside `payment_status`, so the fold keys on "same letters ignoring
-#    separators" rather than on snake_case specifically.
+#    The fold keys on "same letters ignoring separators" rather than on
+#    snake_case specifically, because a third spelling of the same idea has shown
+#    up before: the ECR pages once carried `payment-status` next to
+#    `payment_status`, and hyphens can return the same way.
 
 
 def fold_alias_spellings(schema, where: str, folded: list[str]) -> None:
@@ -522,7 +531,7 @@ def prepare(path: str, method: str, op: dict, entities: dict, conflicts: list[st
     op = json.loads(json.dumps(op))  # the fragment dicts are reused; work on a copy
 
     # `instance` identifies the Payrexx account and is the same for every call a
-    # client makes. Carrying it as a required argument on all 31 operations would
+    # client makes. Carrying it as a required argument on all 33 operations would
     # be noise, and the API-signature scheme has to exclude it from the signed
     # query string anyway -- so it is dropped here and appended by the transport
     # in payrexx/auth.go, which is the only place that knows both.

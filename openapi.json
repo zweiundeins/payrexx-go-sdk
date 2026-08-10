@@ -4328,6 +4328,58 @@
         ]
       }
     },
+    "/ecr/{serialNumber}/config": {
+      "get": {
+        "description": "Retrieves the terminal's configuration (currency, tipping, receipt printing, accepted payment methods). Currently returns an empty/default response for both NexGo and Newland terminals — use `paymentMethods` for NexGo in the meantime.",
+        "operationId": "EcrConfigRetrieve",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EcrConfig"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serialNumber",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "tags": [
+          "Ecr"
+        ]
+      }
+    },
     "/ecr/{serialNumber}/pair": {
       "delete": {
         "description": "",
@@ -4454,12 +4506,8 @@
                     "status": {
                       "type": "string"
                     },
-                    "Data": {
-                      "type": "array",
-                      "items": {
-                        "type": "string",
-                        "format": "json"
-                      }
+                    "data": {
+                      "$ref": "#/components/schemas/EcrPairing"
                     }
                   },
                   "required": [
@@ -4512,17 +4560,16 @@
                 "type": "object",
                 "properties": {
                   "pairingCode": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "One-time pairing code shown on the terminal screen. Required for NexGo devices only — ignored for Newland devices, which authorize automatically using the merchant's stored credentials."
                   },
                   "cashierName": {
                     "type": "string",
                     "default": "terminalName",
-                    "description": ""
+                    "description": "NexGo devices only — ignored for Newland devices."
                   }
                 },
-                "required": [
-                  "pairingCode"
-                ]
+                "required": []
               }
             }
           }
@@ -4621,8 +4668,13 @@
                   "currency": {
                     "type": "string"
                   },
+                  "transactionDescriptor": {
+                    "type": "string",
+                    "description": "Optional free-text descriptor for the transaction."
+                  },
                   "paymentMethod": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Optional. Restricts the transaction to a specific payment method (e.g. \"twint\"). NexGo only — ignored on Newland terminals. Twint is not yet available on Newland terminals."
                   },
                   "paymentReference": {
                     "type": "string"
@@ -4631,31 +4683,39 @@
                     "type": "boolean"
                   },
                   "tipAmount": {
-                    "type": "string",
-                    "description": "added to the total"
+                    "type": "integer",
+                    "description": "In cents, added to the total."
                   },
                   "shopItems": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "integer",
+                          "description": "In cents."
+                        },
+                        "quantity": {
+                          "type": "string"
+                        },
+                        "unit": {
+                          "type": "string"
+                        },
+                        "discount": {
+                          "type": "integer",
+                          "description": "In cents."
+                        },
+                        "vat": {
+                          "type": "integer"
+                        }
                       },
-                      "price": {
-                        "type": "string"
-                      },
-                      "quantity": {
-                        "type": "string"
-                      },
-                      "unit": {
-                        "type": "string"
-                      },
-                      "vat": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "name"
-                    ]
+                      "required": [
+                        "name"
+                      ]
+                    }
                   }
                 },
                 "required": [
@@ -4665,11 +4725,26 @@
               },
               "examples": {
                 "Transaction": {
-                  "summary": "Transaction",
+                  "summary": "Transaction (NexGo)",
                   "value": {
                     "amount": 100,
                     "currency": "CHF",
                     "paymentMethod": "twint",
+                    "printSlip": true,
+                    "tipAmount": 10,
+                    "shopItems": [
+                      {
+                        "name": "Beer",
+                        "price": 10
+                      }
+                    ]
+                  }
+                },
+                "Transaction (Newland)": {
+                  "summary": "Transaction (Newland)",
+                  "value": {
+                    "amount": 100,
+                    "currency": "CHF",
                     "printSlip": true,
                     "tipAmount": 10,
                     "shopItems": [
@@ -4846,6 +4921,106 @@
         ]
       }
     },
+    "/ecr/{serialNumber}/payment/{paymentId}/refund": {
+      "post": {
+        "description": "Refunds a completed payment. Newland: routed through the same reversal mechanism as `void`, so only a full refund is possible; a partial `amount` is rejected with a 400. Not currently available for NexGo terminals (responds 501 Not Implemented).",
+        "operationId": "EcrPaymentRefund",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/EcrPayment"
+                    },
+                    "message": {
+                      "type": "string",
+                      "description": "Contains error message"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Not Implemented — refund is not currently available on NexGo terminals",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serialNumber",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "paymentId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "description": "In cents. Optional — omit or send 0 for a full refund. Newland only accepts the full transaction amount; a smaller value is rejected."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Ecr"
+        ]
+      }
+    },
     "/ecr/{serialNumber}/payment/{paymentId}/void": {
       "post": {
         "description": "",
@@ -4928,7 +5103,7 @@
     },
     "/ecr/{serialNumber}/paymentMethods": {
       "get": {
-        "description": "",
+        "description": "NexGo: returns the terminal's available payment methods. Newland: always returns an empty list — not yet supported.",
         "operationId": "EcrPaymentMethodList",
         "responses": {
           "200": {
@@ -4980,6 +5155,29 @@
   },
   "components": {
     "schemas": {
+      "EcrConfig": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "tip": {
+            "type": "boolean"
+          },
+          "printReceipt": {
+            "type": "boolean"
+          },
+          "paymentMethods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "EcrPairing": {
         "type": "object",
         "properties": {
@@ -4987,7 +5185,8 @@
             "type": "string"
           },
           "cashierName": {
-            "type": "string"
+            "type": "string",
+            "description": "NexGo only — present once a Naka pairing exists."
           },
           "configuration": {
             "type": "object",
@@ -5003,23 +5202,97 @@
               },
               "currency": {
                 "type": "string"
+              },
+              "timezone": {
+                "type": "string"
               }
-            }
+            },
+            "description": "NexGo only — omitted for Newland (always an empty object)."
           }
         }
       },
       "EcrPayment": {
         "type": "object",
         "properties": {
-          "payment_id": {
-            "type": "string",
-            "description": ""
-          },
-          "payment_status": {
+          "paymentId": {
             "type": "string"
           },
+          "status": {
+            "type": "string",
+            "description": "PAYMENT_REQUESTED | IN_PROGRESS | SUCCESS | DECLINED | UNDERPAID | TERMINATED | REVERTED | EXPIRED | FAILED | UNKNOWN"
+          },
+          "type": {
+            "type": "string",
+            "description": "CHARGE or REFUND",
+            "default": "CHARGE"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "in cents"
+          },
+          "transactionDescriptor": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "tipAmount": {
+            "type": "integer",
+            "description": "in cents"
+          },
+          "paymentMethod": {
+            "type": "string"
+          },
+          "cardBrand": {
+            "type": "string"
+          },
+          "paymentReference": {
+            "type": "string"
+          },
+          "printSlip": {
+            "type": "boolean"
+          },
+          "terminal": {
+            "type": "string",
+            "description": "Terminal serial number"
+          },
+          "reversalStatus": {
+            "type": "string",
+            "description": "Raw provider reversal status — present only once a void/refund reversal has been initiated"
+          },
+          "shopItems": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "integer",
+                  "description": "In cents."
+                },
+                "quantity": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "discount": {
+                  "type": "integer",
+                  "description": "In cents."
+                },
+                "tax": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
           "slip": {
-            "description": "Free-form: object on the payment pages, array on the paymentMethods page."
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

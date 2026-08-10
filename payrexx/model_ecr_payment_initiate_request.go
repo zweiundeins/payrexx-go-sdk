@@ -22,14 +22,17 @@ var _ MappedNullable = &EcrPaymentInitiateRequest{}
 // EcrPaymentInitiateRequest struct for EcrPaymentInitiateRequest
 type EcrPaymentInitiateRequest struct {
 	// in cents
-	Amount           int32   `json:"amount"`
-	Currency         string  `json:"currency"`
+	Amount   int32  `json:"amount"`
+	Currency string `json:"currency"`
+	// Optional free-text descriptor for the transaction.
+	TransactionDescriptor *string `json:"transactionDescriptor,omitempty"`
+	// Optional. Restricts the transaction to a specific payment method (e.g. \"twint\"). NexGo only — ignored on Newland terminals. Twint is not yet available on Newland terminals.
 	PaymentMethod    *string `json:"paymentMethod,omitempty"`
 	PaymentReference *string `json:"paymentReference,omitempty"`
 	PrintSlip        *bool   `json:"printSlip,omitempty"`
-	// added to the total
-	TipAmount *string                             `json:"tipAmount,omitempty"`
-	ShopItems *EcrPaymentInitiateRequestShopItems `json:"shopItems,omitempty"`
+	// In cents, added to the total.
+	TipAmount *int32                                    `json:"tipAmount,omitempty"`
+	ShopItems []EcrPaymentInitiateRequestShopItemsInner `json:"shopItems,omitempty"`
 }
 
 type _EcrPaymentInitiateRequest EcrPaymentInitiateRequest
@@ -99,6 +102,38 @@ func (o *EcrPaymentInitiateRequest) GetCurrencyOk() (*string, bool) {
 // SetCurrency sets field value
 func (o *EcrPaymentInitiateRequest) SetCurrency(v string) {
 	o.Currency = v
+}
+
+// GetTransactionDescriptor returns the TransactionDescriptor field value if set, zero value otherwise.
+func (o *EcrPaymentInitiateRequest) GetTransactionDescriptor() string {
+	if o == nil || IsNil(o.TransactionDescriptor) {
+		var ret string
+		return ret
+	}
+	return *o.TransactionDescriptor
+}
+
+// GetTransactionDescriptorOk returns a tuple with the TransactionDescriptor field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPaymentInitiateRequest) GetTransactionDescriptorOk() (*string, bool) {
+	if o == nil || IsNil(o.TransactionDescriptor) {
+		return nil, false
+	}
+	return o.TransactionDescriptor, true
+}
+
+// HasTransactionDescriptor returns a boolean if a field has been set.
+func (o *EcrPaymentInitiateRequest) HasTransactionDescriptor() bool {
+	if o != nil && !IsNil(o.TransactionDescriptor) {
+		return true
+	}
+
+	return false
+}
+
+// SetTransactionDescriptor gets a reference to the given string and assigns it to the TransactionDescriptor field.
+func (o *EcrPaymentInitiateRequest) SetTransactionDescriptor(v string) {
+	o.TransactionDescriptor = &v
 }
 
 // GetPaymentMethod returns the PaymentMethod field value if set, zero value otherwise.
@@ -198,9 +233,9 @@ func (o *EcrPaymentInitiateRequest) SetPrintSlip(v bool) {
 }
 
 // GetTipAmount returns the TipAmount field value if set, zero value otherwise.
-func (o *EcrPaymentInitiateRequest) GetTipAmount() string {
+func (o *EcrPaymentInitiateRequest) GetTipAmount() int32 {
 	if o == nil || IsNil(o.TipAmount) {
-		var ret string
+		var ret int32
 		return ret
 	}
 	return *o.TipAmount
@@ -208,7 +243,7 @@ func (o *EcrPaymentInitiateRequest) GetTipAmount() string {
 
 // GetTipAmountOk returns a tuple with the TipAmount field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EcrPaymentInitiateRequest) GetTipAmountOk() (*string, bool) {
+func (o *EcrPaymentInitiateRequest) GetTipAmountOk() (*int32, bool) {
 	if o == nil || IsNil(o.TipAmount) {
 		return nil, false
 	}
@@ -224,23 +259,23 @@ func (o *EcrPaymentInitiateRequest) HasTipAmount() bool {
 	return false
 }
 
-// SetTipAmount gets a reference to the given string and assigns it to the TipAmount field.
-func (o *EcrPaymentInitiateRequest) SetTipAmount(v string) {
+// SetTipAmount gets a reference to the given int32 and assigns it to the TipAmount field.
+func (o *EcrPaymentInitiateRequest) SetTipAmount(v int32) {
 	o.TipAmount = &v
 }
 
 // GetShopItems returns the ShopItems field value if set, zero value otherwise.
-func (o *EcrPaymentInitiateRequest) GetShopItems() EcrPaymentInitiateRequestShopItems {
+func (o *EcrPaymentInitiateRequest) GetShopItems() []EcrPaymentInitiateRequestShopItemsInner {
 	if o == nil || IsNil(o.ShopItems) {
-		var ret EcrPaymentInitiateRequestShopItems
+		var ret []EcrPaymentInitiateRequestShopItemsInner
 		return ret
 	}
-	return *o.ShopItems
+	return o.ShopItems
 }
 
 // GetShopItemsOk returns a tuple with the ShopItems field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EcrPaymentInitiateRequest) GetShopItemsOk() (*EcrPaymentInitiateRequestShopItems, bool) {
+func (o *EcrPaymentInitiateRequest) GetShopItemsOk() ([]EcrPaymentInitiateRequestShopItemsInner, bool) {
 	if o == nil || IsNil(o.ShopItems) {
 		return nil, false
 	}
@@ -256,9 +291,9 @@ func (o *EcrPaymentInitiateRequest) HasShopItems() bool {
 	return false
 }
 
-// SetShopItems gets a reference to the given EcrPaymentInitiateRequestShopItems and assigns it to the ShopItems field.
-func (o *EcrPaymentInitiateRequest) SetShopItems(v EcrPaymentInitiateRequestShopItems) {
-	o.ShopItems = &v
+// SetShopItems gets a reference to the given []EcrPaymentInitiateRequestShopItemsInner and assigns it to the ShopItems field.
+func (o *EcrPaymentInitiateRequest) SetShopItems(v []EcrPaymentInitiateRequestShopItemsInner) {
+	o.ShopItems = v
 }
 
 func (o EcrPaymentInitiateRequest) MarshalJSON() ([]byte, error) {
@@ -273,6 +308,9 @@ func (o EcrPaymentInitiateRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["amount"] = o.Amount
 	toSerialize["currency"] = o.Currency
+	if !IsNil(o.TransactionDescriptor) {
+		toSerialize["transactionDescriptor"] = o.TransactionDescriptor
+	}
 	if !IsNil(o.PaymentMethod) {
 		toSerialize["paymentMethod"] = o.PaymentMethod
 	}

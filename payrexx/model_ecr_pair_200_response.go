@@ -21,8 +21,8 @@ var _ MappedNullable = &EcrPair200Response{}
 
 // EcrPair200Response struct for EcrPair200Response
 type EcrPair200Response struct {
-	Status string   `json:"status"`
-	Data   []string `json:"Data,omitempty"`
+	Status string      `json:"status"`
+	Data   *EcrPairing `json:"data,omitempty"`
 }
 
 type _EcrPair200Response EcrPair200Response
@@ -70,17 +70,17 @@ func (o *EcrPair200Response) SetStatus(v string) {
 }
 
 // GetData returns the Data field value if set, zero value otherwise.
-func (o *EcrPair200Response) GetData() []string {
+func (o *EcrPair200Response) GetData() EcrPairing {
 	if o == nil || IsNil(o.Data) {
-		var ret []string
+		var ret EcrPairing
 		return ret
 	}
-	return o.Data
+	return *o.Data
 }
 
 // GetDataOk returns a tuple with the Data field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EcrPair200Response) GetDataOk() ([]string, bool) {
+func (o *EcrPair200Response) GetDataOk() (*EcrPairing, bool) {
 	if o == nil || IsNil(o.Data) {
 		return nil, false
 	}
@@ -96,9 +96,9 @@ func (o *EcrPair200Response) HasData() bool {
 	return false
 }
 
-// SetData gets a reference to the given []string and assigns it to the Data field.
-func (o *EcrPair200Response) SetData(v []string) {
-	o.Data = v
+// SetData gets a reference to the given EcrPairing and assigns it to the Data field.
+func (o *EcrPair200Response) SetData(v EcrPairing) {
+	o.Data = &v
 }
 
 func (o EcrPair200Response) MarshalJSON() ([]byte, error) {
@@ -113,7 +113,7 @@ func (o EcrPair200Response) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["status"] = o.Status
 	if !IsNil(o.Data) {
-		toSerialize["Data"] = o.Data
+		toSerialize["data"] = o.Data
 	}
 	return toSerialize, nil
 }

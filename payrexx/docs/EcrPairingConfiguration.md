@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **HasTipping** | Pointer to **string** |  | [optional] 
 **PointOfSaleName** | Pointer to **string** |  | [optional] 
 **Currency** | Pointer to **string** |  | [optional] 
+**Timezone** | Pointer to **string** |  | [optional] 
 
 ## Methods
 
@@ -127,6 +128,31 @@ SetCurrency sets Currency field to given value.
 `func (o *EcrPairingConfiguration) HasCurrency() bool`
 
 HasCurrency returns a boolean if a field has been set.
+
+### GetTimezone
+
+`func (o *EcrPairingConfiguration) GetTimezone() string`
+
+GetTimezone returns the Timezone field if non-nil, zero value otherwise.
+
+### GetTimezoneOk
+
+`func (o *EcrPairingConfiguration) GetTimezoneOk() (*string, bool)`
+
+GetTimezoneOk returns a tuple with the Timezone field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTimezone
+
+`func (o *EcrPairingConfiguration) SetTimezone(v string)`
+
+SetTimezone sets Timezone field to given value.
+
+### HasTimezone
+
+`func (o *EcrPairingConfiguration) HasTimezone() bool`
+
+HasTimezone returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
