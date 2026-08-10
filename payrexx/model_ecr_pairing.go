@@ -19,7 +19,8 @@ var _ MappedNullable = &EcrPairing{}
 
 // EcrPairing struct for EcrPairing
 type EcrPairing struct {
-	PairingStatus *string                  `json:"pairingStatus,omitempty"`
+	PairingStatus *string `json:"pairingStatus,omitempty"`
+	// NexGo only — present once a Naka pairing exists.
 	CashierName   *string                  `json:"cashierName,omitempty"`
 	Configuration *EcrPairingConfiguration `json:"configuration,omitempty"`
 }

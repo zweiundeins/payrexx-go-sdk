@@ -17,12 +17,13 @@ import (
 // checks if the EcrPairingConfiguration type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &EcrPairingConfiguration{}
 
-// EcrPairingConfiguration struct for EcrPairingConfiguration
+// EcrPairingConfiguration NexGo only — omitted for Newland (always an empty object).
 type EcrPairingConfiguration struct {
 	Language        *string `json:"language,omitempty"`
 	HasTipping      *string `json:"hasTipping,omitempty"`
 	PointOfSaleName *string `json:"pointOfSaleName,omitempty"`
 	Currency        *string `json:"currency,omitempty"`
+	Timezone        *string `json:"timezone,omitempty"`
 }
 
 // NewEcrPairingConfiguration instantiates a new EcrPairingConfiguration object
@@ -170,6 +171,38 @@ func (o *EcrPairingConfiguration) SetCurrency(v string) {
 	o.Currency = &v
 }
 
+// GetTimezone returns the Timezone field value if set, zero value otherwise.
+func (o *EcrPairingConfiguration) GetTimezone() string {
+	if o == nil || IsNil(o.Timezone) {
+		var ret string
+		return ret
+	}
+	return *o.Timezone
+}
+
+// GetTimezoneOk returns a tuple with the Timezone field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPairingConfiguration) GetTimezoneOk() (*string, bool) {
+	if o == nil || IsNil(o.Timezone) {
+		return nil, false
+	}
+	return o.Timezone, true
+}
+
+// HasTimezone returns a boolean if a field has been set.
+func (o *EcrPairingConfiguration) HasTimezone() bool {
+	if o != nil && !IsNil(o.Timezone) {
+		return true
+	}
+
+	return false
+}
+
+// SetTimezone gets a reference to the given string and assigns it to the Timezone field.
+func (o *EcrPairingConfiguration) SetTimezone(v string) {
+	o.Timezone = &v
+}
+
 func (o EcrPairingConfiguration) MarshalJSON() ([]byte, error) {
 	toSerialize, err := o.ToMap()
 	if err != nil {
@@ -191,6 +224,9 @@ func (o EcrPairingConfiguration) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Currency) {
 		toSerialize["currency"] = o.Currency
+	}
+	if !IsNil(o.Timezone) {
+		toSerialize["timezone"] = o.Timezone
 	}
 	return toSerialize, nil
 }

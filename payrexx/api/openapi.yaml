@@ -3453,6 +3453,36 @@ paths:
       summary: Update a Tokenization
       tags:
       - Transaction
+  /ecr/{serialNumber}/config:
+    get:
+      description: "Retrieves the terminal's configuration (currency, tipping, receipt\
+        \ printing, accepted payment methods). Currently returns an empty/default\
+        \ response for both NexGo and Newland terminals — use `paymentMethods` for\
+        \ NexGo in the meantime."
+      operationId: EcrConfigRetrieve
+      parameters:
+      - explode: false
+        in: path
+        name: serialNumber
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcrConfigRetrieve_200_response"
+          description: ""
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Not Found
+      tags:
+      - Ecr
   /ecr/{serialNumber}/pair:
     delete:
       description: ""
@@ -3569,11 +3599,21 @@ paths:
           application/json:
             examples:
               Transaction:
-                summary: Transaction
+                summary: Transaction (NexGo)
                 value:
                   amount: 100
                   currency: CHF
                   paymentMethod: twint
+                  printSlip: true
+                  tipAmount: 10
+                  shopItems:
+                  - name: Beer
+                    price: 10
+              Transaction (Newland):
+                summary: Transaction (Newland)
+                value:
+                  amount: 100
+                  currency: CHF
                   printSlip: true
                   tipAmount: 10
                   shopItems:
@@ -3702,6 +3742,62 @@ paths:
       summary: ""
       tags:
       - Ecr
+  /ecr/{serialNumber}/payment/{paymentId}/refund:
+    post:
+      description: "Refunds a completed payment. Newland: routed through the same\
+        \ reversal mechanism as `void`, so only a full refund is possible; a partial\
+        \ `amount` is rejected with a 400. Not currently available for NexGo terminals\
+        \ (responds 501 Not Implemented)."
+      operationId: EcrPaymentRefund
+      parameters:
+      - explode: false
+        in: path
+        name: serialNumber
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: paymentId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EcrPaymentRefund_request"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EcrPaymentInitiate_200_response"
+          description: ""
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Not Found
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Not Implemented — refund is not currently available on NexGo
+            terminals
+      summary: ""
+      tags:
+      - Ecr
   /ecr/{serialNumber}/payment/{paymentId}/void:
     post:
       description: ""
@@ -3749,7 +3845,8 @@ paths:
       - Ecr
   /ecr/{serialNumber}/paymentMethods:
     get:
-      description: ""
+      description: "NexGo: returns the terminal's available payment methods. Newland:\
+        \ always returns an empty list — not yet supported."
       operationId: EcrPaymentMethodList
       parameters:
       - explode: false
@@ -3774,6 +3871,29 @@ paths:
       - Ecr
 components:
   schemas:
+    EcrConfig:
+      example:
+        name: name
+        currency: currency
+        tip: true
+        printReceipt: true
+        paymentMethods:
+        - paymentMethods
+        - paymentMethods
+      properties:
+        name:
+          type: string
+        currency:
+          type: string
+        tip:
+          type: boolean
+        printReceipt:
+          type: boolean
+        paymentMethods:
+          items:
+            type: string
+          type: array
+      type: object
     EcrPairing:
       example:
         pairingStatus: pairingStatus
@@ -3783,28 +3903,91 @@ components:
           hasTipping: hasTipping
           pointOfSaleName: pointOfSaleName
           currency: currency
+          timezone: timezone
       properties:
         pairingStatus:
           type: string
         cashierName:
+          description: NexGo only — present once a Naka pairing exists.
           type: string
         configuration:
           $ref: "#/components/schemas/EcrPairing_configuration"
       type: object
     EcrPayment:
       example:
-        payment_id: payment_id
-        payment_status: payment_status
-        slip: ""
-      properties:
-        payment_id:
-          description: ""
-          type: string
-        payment_status:
-          type: string
+        paymentId: paymentId
+        status: status
+        type: CHARGE
+        amount: 0
+        transactionDescriptor: transactionDescriptor
+        currency: currency
+        tipAmount: 6
+        paymentMethod: paymentMethod
+        cardBrand: cardBrand
+        paymentReference: paymentReference
+        printSlip: true
+        terminal: terminal
+        reversalStatus: reversalStatus
+        shopItems:
+        - name: name
+          price: 1
+          quantity: quantity
+          unit: unit
+          discount: 5
+          tax: 5
+        - name: name
+          price: 1
+          quantity: quantity
+          unit: unit
+          discount: 5
+          tax: 5
         slip:
-          description: "Free-form: object on the payment pages, array on the paymentMethods\
-            \ page."
+        - slip
+        - slip
+      properties:
+        paymentId:
+          type: string
+        status:
+          description: PAYMENT_REQUESTED | IN_PROGRESS | SUCCESS | DECLINED | UNDERPAID
+            | TERMINATED | REVERTED | EXPIRED | FAILED | UNKNOWN
+          type: string
+        type:
+          default: CHARGE
+          description: CHARGE or REFUND
+          type: string
+        amount:
+          description: in cents
+          type: integer
+        transactionDescriptor:
+          type: string
+        currency:
+          type: string
+        tipAmount:
+          description: in cents
+          type: integer
+        paymentMethod:
+          type: string
+        cardBrand:
+          type: string
+        paymentReference:
+          type: string
+        printSlip:
+          type: boolean
+        terminal:
+          description: Terminal serial number
+          type: string
+        reversalStatus:
+          description: Raw provider reversal status — present only once a void/refund
+            reversal has been initiated
+          type: string
+        shopItems:
+          items:
+            $ref: "#/components/schemas/EcrPayment_shopItems_inner"
+          type: array
+        slip:
+          items:
+            type: string
+          type: array
       type: object
     EcrPaymentMethod:
       example:
@@ -6795,6 +6978,25 @@ components:
       required:
       - vatRate
       type: object
+    EcrConfigRetrieve_200_response:
+      example:
+        status: status
+        data:
+          name: name
+          currency: currency
+          tip: true
+          printReceipt: true
+          paymentMethods:
+          - paymentMethods
+          - paymentMethods
+      properties:
+        status:
+          type: string
+        data:
+          $ref: "#/components/schemas/EcrConfig"
+      required:
+      - status
+      type: object
     EcrPairingRetrieve_200_response:
       example:
         status: status
@@ -6806,6 +7008,7 @@ components:
             hasTipping: hasTipping
             pointOfSaleName: pointOfSaleName
             currency: currency
+            timezone: timezone
       properties:
         status:
           type: string
@@ -6815,28 +7018,32 @@ components:
     EcrPair_request:
       properties:
         pairingCode:
+          description: "One-time pairing code shown on the terminal screen. Required\
+            \ for NexGo devices only — ignored for Newland devices, which authorize\
+            \ automatically using the merchant's stored credentials."
           type: string
         cashierName:
           default: terminalName
-          description: ""
+          description: NexGo devices only — ignored for Newland devices.
           type: string
-      required:
-      - pairingCode
       type: object
     EcrPair_200_response:
       example:
         status: status
-        Data:
-        - Data
-        - Data
+        data:
+          pairingStatus: pairingStatus
+          cashierName: cashierName
+          configuration:
+            language: language
+            hasTipping: hasTipping
+            pointOfSaleName: pointOfSaleName
+            currency: currency
+            timezone: timezone
       properties:
         status:
           type: string
-        Data:
-          items:
-            format: json
-            type: string
-          type: array
+        data:
+          $ref: "#/components/schemas/EcrPairing"
       required:
       - status
       type: object
@@ -6861,18 +7068,22 @@ components:
       required:
       - status
       type: object
-    EcrPaymentInitiate_request_shopItems:
+    EcrPaymentInitiate_request_shopItems_inner:
       properties:
         name:
           type: string
         price:
-          type: string
+          description: In cents.
+          type: integer
         quantity:
           type: string
         unit:
           type: string
+        discount:
+          description: In cents.
+          type: integer
         vat:
-          type: string
+          type: integer
       required:
       - name
       type: object
@@ -6883,17 +7094,25 @@ components:
           type: integer
         currency:
           type: string
+        transactionDescriptor:
+          description: Optional free-text descriptor for the transaction.
+          type: string
         paymentMethod:
+          description: Optional. Restricts the transaction to a specific payment method
+            (e.g. "twint"). NexGo only — ignored on Newland terminals. Twint is not
+            yet available on Newland terminals.
           type: string
         paymentReference:
           type: string
         printSlip:
           type: boolean
         tipAmount:
-          description: added to the total
-          type: string
+          description: "In cents, added to the total."
+          type: integer
         shopItems:
-          $ref: "#/components/schemas/EcrPaymentInitiate_request_shopItems"
+          items:
+            $ref: "#/components/schemas/EcrPaymentInitiate_request_shopItems_inner"
+          type: array
       required:
       - amount
       - currency
@@ -6902,9 +7121,35 @@ components:
       example:
         status: status
         data:
-          payment_id: payment_id
-          payment_status: payment_status
-          slip: ""
+          paymentId: paymentId
+          status: status
+          type: CHARGE
+          amount: 0
+          transactionDescriptor: transactionDescriptor
+          currency: currency
+          tipAmount: 6
+          paymentMethod: paymentMethod
+          cardBrand: cardBrand
+          paymentReference: paymentReference
+          printSlip: true
+          terminal: terminal
+          reversalStatus: reversalStatus
+          shopItems:
+          - name: name
+            price: 1
+            quantity: quantity
+            unit: unit
+            discount: 5
+            tax: 5
+          - name: name
+            price: 1
+            quantity: quantity
+            unit: unit
+            discount: 5
+            tax: 5
+          slip:
+          - slip
+          - slip
         message: message
       properties:
         status:
@@ -6921,9 +7166,35 @@ components:
       example:
         status: status
         data:
-          payment_id: payment_id
-          payment_status: payment_status
-          slip: ""
+          paymentId: paymentId
+          status: status
+          type: CHARGE
+          amount: 0
+          transactionDescriptor: transactionDescriptor
+          currency: currency
+          tipAmount: 6
+          paymentMethod: paymentMethod
+          cardBrand: cardBrand
+          paymentReference: paymentReference
+          printSlip: true
+          terminal: terminal
+          reversalStatus: reversalStatus
+          shopItems:
+          - name: name
+            price: 1
+            quantity: quantity
+            unit: unit
+            discount: 5
+            tax: 5
+          - name: name
+            price: 1
+            quantity: quantity
+            unit: unit
+            discount: 5
+            tax: 5
+          slip:
+          - slip
+          - slip
         message: message
       properties:
         status:
@@ -6933,6 +7204,13 @@ components:
         message:
           description: Contains error message
           type: string
+      type: object
+    EcrPaymentRefund_request:
+      properties:
+        amount:
+          description: In cents. Optional — omit or send 0 for a full refund. Newland
+            only accepts the full transaction amount; a smaller value is rejected.
+          type: integer
       type: object
     EcrPaymentMethodList_200_response:
       example:
@@ -6963,11 +7241,13 @@ components:
       - status
       type: object
     EcrPairing_configuration:
+      description: NexGo only — omitted for Newland (always an empty object).
       example:
         language: language
         hasTipping: hasTipping
         pointOfSaleName: pointOfSaleName
         currency: currency
+        timezone: timezone
       properties:
         language:
           type: string
@@ -6977,6 +7257,32 @@ components:
           type: string
         currency:
           type: string
+        timezone:
+          type: string
+      type: object
+    EcrPayment_shopItems_inner:
+      example:
+        name: name
+        price: 1
+        quantity: quantity
+        unit: unit
+        discount: 5
+        tax: 5
+      properties:
+        name:
+          type: string
+        price:
+          description: In cents.
+          type: integer
+        quantity:
+          type: string
+        unit:
+          type: string
+        discount:
+          description: In cents.
+          type: integer
+        tax:
+          type: integer
       type: object
     Error_error:
       example:

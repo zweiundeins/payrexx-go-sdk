@@ -19,11 +19,27 @@ var _ MappedNullable = &EcrPayment{}
 
 // EcrPayment struct for EcrPayment
 type EcrPayment struct {
-	//
-	PaymentId     *string `json:"payment_id,omitempty"`
-	PaymentStatus *string `json:"payment_status,omitempty"`
-	// Free-form: object on the payment pages, array on the paymentMethods page.
-	Slip interface{} `json:"slip,omitempty"`
+	PaymentId *string `json:"paymentId,omitempty"`
+	// PAYMENT_REQUESTED | IN_PROGRESS | SUCCESS | DECLINED | UNDERPAID | TERMINATED | REVERTED | EXPIRED | FAILED | UNKNOWN
+	Status *string `json:"status,omitempty"`
+	// CHARGE or REFUND
+	Type *string `json:"type,omitempty"`
+	// in cents
+	Amount                *int32  `json:"amount,omitempty"`
+	TransactionDescriptor *string `json:"transactionDescriptor,omitempty"`
+	Currency              *string `json:"currency,omitempty"`
+	// in cents
+	TipAmount        *int32  `json:"tipAmount,omitempty"`
+	PaymentMethod    *string `json:"paymentMethod,omitempty"`
+	CardBrand        *string `json:"cardBrand,omitempty"`
+	PaymentReference *string `json:"paymentReference,omitempty"`
+	PrintSlip        *bool   `json:"printSlip,omitempty"`
+	// Terminal serial number
+	Terminal *string `json:"terminal,omitempty"`
+	// Raw provider reversal status — present only once a void/refund reversal has been initiated
+	ReversalStatus *string                    `json:"reversalStatus,omitempty"`
+	ShopItems      []EcrPaymentShopItemsInner `json:"shopItems,omitempty"`
+	Slip           []string                   `json:"slip,omitempty"`
 }
 
 // NewEcrPayment instantiates a new EcrPayment object
@@ -32,6 +48,8 @@ type EcrPayment struct {
 // will change when the set of required properties is changed
 func NewEcrPayment() *EcrPayment {
 	this := EcrPayment{}
+	var type_ string = "CHARGE"
+	this.Type = &type_
 	return &this
 }
 
@@ -40,6 +58,8 @@ func NewEcrPayment() *EcrPayment {
 // but it doesn't guarantee that properties required by API are set
 func NewEcrPaymentWithDefaults() *EcrPayment {
 	this := EcrPayment{}
+	var type_ string = "CHARGE"
+	this.Type = &type_
 	return &this
 }
 
@@ -75,42 +95,426 @@ func (o *EcrPayment) SetPaymentId(v string) {
 	o.PaymentId = &v
 }
 
-// GetPaymentStatus returns the PaymentStatus field value if set, zero value otherwise.
-func (o *EcrPayment) GetPaymentStatus() string {
-	if o == nil || IsNil(o.PaymentStatus) {
+// GetStatus returns the Status field value if set, zero value otherwise.
+func (o *EcrPayment) GetStatus() string {
+	if o == nil || IsNil(o.Status) {
 		var ret string
 		return ret
 	}
-	return *o.PaymentStatus
+	return *o.Status
 }
 
-// GetPaymentStatusOk returns a tuple with the PaymentStatus field value if set, nil otherwise
+// GetStatusOk returns a tuple with the Status field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *EcrPayment) GetPaymentStatusOk() (*string, bool) {
-	if o == nil || IsNil(o.PaymentStatus) {
+func (o *EcrPayment) GetStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.Status) {
 		return nil, false
 	}
-	return o.PaymentStatus, true
+	return o.Status, true
 }
 
-// HasPaymentStatus returns a boolean if a field has been set.
-func (o *EcrPayment) HasPaymentStatus() bool {
-	if o != nil && !IsNil(o.PaymentStatus) {
+// HasStatus returns a boolean if a field has been set.
+func (o *EcrPayment) HasStatus() bool {
+	if o != nil && !IsNil(o.Status) {
 		return true
 	}
 
 	return false
 }
 
-// SetPaymentStatus gets a reference to the given string and assigns it to the PaymentStatus field.
-func (o *EcrPayment) SetPaymentStatus(v string) {
-	o.PaymentStatus = &v
+// SetStatus gets a reference to the given string and assigns it to the Status field.
+func (o *EcrPayment) SetStatus(v string) {
+	o.Status = &v
 }
 
-// GetSlip returns the Slip field value if set, zero value otherwise (both if not set or set to explicit null).
-func (o *EcrPayment) GetSlip() interface{} {
-	if o == nil {
-		var ret interface{}
+// GetType returns the Type field value if set, zero value otherwise.
+func (o *EcrPayment) GetType() string {
+	if o == nil || IsNil(o.Type) {
+		var ret string
+		return ret
+	}
+	return *o.Type
+}
+
+// GetTypeOk returns a tuple with the Type field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetTypeOk() (*string, bool) {
+	if o == nil || IsNil(o.Type) {
+		return nil, false
+	}
+	return o.Type, true
+}
+
+// HasType returns a boolean if a field has been set.
+func (o *EcrPayment) HasType() bool {
+	if o != nil && !IsNil(o.Type) {
+		return true
+	}
+
+	return false
+}
+
+// SetType gets a reference to the given string and assigns it to the Type field.
+func (o *EcrPayment) SetType(v string) {
+	o.Type = &v
+}
+
+// GetAmount returns the Amount field value if set, zero value otherwise.
+func (o *EcrPayment) GetAmount() int32 {
+	if o == nil || IsNil(o.Amount) {
+		var ret int32
+		return ret
+	}
+	return *o.Amount
+}
+
+// GetAmountOk returns a tuple with the Amount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetAmountOk() (*int32, bool) {
+	if o == nil || IsNil(o.Amount) {
+		return nil, false
+	}
+	return o.Amount, true
+}
+
+// HasAmount returns a boolean if a field has been set.
+func (o *EcrPayment) HasAmount() bool {
+	if o != nil && !IsNil(o.Amount) {
+		return true
+	}
+
+	return false
+}
+
+// SetAmount gets a reference to the given int32 and assigns it to the Amount field.
+func (o *EcrPayment) SetAmount(v int32) {
+	o.Amount = &v
+}
+
+// GetTransactionDescriptor returns the TransactionDescriptor field value if set, zero value otherwise.
+func (o *EcrPayment) GetTransactionDescriptor() string {
+	if o == nil || IsNil(o.TransactionDescriptor) {
+		var ret string
+		return ret
+	}
+	return *o.TransactionDescriptor
+}
+
+// GetTransactionDescriptorOk returns a tuple with the TransactionDescriptor field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetTransactionDescriptorOk() (*string, bool) {
+	if o == nil || IsNil(o.TransactionDescriptor) {
+		return nil, false
+	}
+	return o.TransactionDescriptor, true
+}
+
+// HasTransactionDescriptor returns a boolean if a field has been set.
+func (o *EcrPayment) HasTransactionDescriptor() bool {
+	if o != nil && !IsNil(o.TransactionDescriptor) {
+		return true
+	}
+
+	return false
+}
+
+// SetTransactionDescriptor gets a reference to the given string and assigns it to the TransactionDescriptor field.
+func (o *EcrPayment) SetTransactionDescriptor(v string) {
+	o.TransactionDescriptor = &v
+}
+
+// GetCurrency returns the Currency field value if set, zero value otherwise.
+func (o *EcrPayment) GetCurrency() string {
+	if o == nil || IsNil(o.Currency) {
+		var ret string
+		return ret
+	}
+	return *o.Currency
+}
+
+// GetCurrencyOk returns a tuple with the Currency field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetCurrencyOk() (*string, bool) {
+	if o == nil || IsNil(o.Currency) {
+		return nil, false
+	}
+	return o.Currency, true
+}
+
+// HasCurrency returns a boolean if a field has been set.
+func (o *EcrPayment) HasCurrency() bool {
+	if o != nil && !IsNil(o.Currency) {
+		return true
+	}
+
+	return false
+}
+
+// SetCurrency gets a reference to the given string and assigns it to the Currency field.
+func (o *EcrPayment) SetCurrency(v string) {
+	o.Currency = &v
+}
+
+// GetTipAmount returns the TipAmount field value if set, zero value otherwise.
+func (o *EcrPayment) GetTipAmount() int32 {
+	if o == nil || IsNil(o.TipAmount) {
+		var ret int32
+		return ret
+	}
+	return *o.TipAmount
+}
+
+// GetTipAmountOk returns a tuple with the TipAmount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetTipAmountOk() (*int32, bool) {
+	if o == nil || IsNil(o.TipAmount) {
+		return nil, false
+	}
+	return o.TipAmount, true
+}
+
+// HasTipAmount returns a boolean if a field has been set.
+func (o *EcrPayment) HasTipAmount() bool {
+	if o != nil && !IsNil(o.TipAmount) {
+		return true
+	}
+
+	return false
+}
+
+// SetTipAmount gets a reference to the given int32 and assigns it to the TipAmount field.
+func (o *EcrPayment) SetTipAmount(v int32) {
+	o.TipAmount = &v
+}
+
+// GetPaymentMethod returns the PaymentMethod field value if set, zero value otherwise.
+func (o *EcrPayment) GetPaymentMethod() string {
+	if o == nil || IsNil(o.PaymentMethod) {
+		var ret string
+		return ret
+	}
+	return *o.PaymentMethod
+}
+
+// GetPaymentMethodOk returns a tuple with the PaymentMethod field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetPaymentMethodOk() (*string, bool) {
+	if o == nil || IsNil(o.PaymentMethod) {
+		return nil, false
+	}
+	return o.PaymentMethod, true
+}
+
+// HasPaymentMethod returns a boolean if a field has been set.
+func (o *EcrPayment) HasPaymentMethod() bool {
+	if o != nil && !IsNil(o.PaymentMethod) {
+		return true
+	}
+
+	return false
+}
+
+// SetPaymentMethod gets a reference to the given string and assigns it to the PaymentMethod field.
+func (o *EcrPayment) SetPaymentMethod(v string) {
+	o.PaymentMethod = &v
+}
+
+// GetCardBrand returns the CardBrand field value if set, zero value otherwise.
+func (o *EcrPayment) GetCardBrand() string {
+	if o == nil || IsNil(o.CardBrand) {
+		var ret string
+		return ret
+	}
+	return *o.CardBrand
+}
+
+// GetCardBrandOk returns a tuple with the CardBrand field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetCardBrandOk() (*string, bool) {
+	if o == nil || IsNil(o.CardBrand) {
+		return nil, false
+	}
+	return o.CardBrand, true
+}
+
+// HasCardBrand returns a boolean if a field has been set.
+func (o *EcrPayment) HasCardBrand() bool {
+	if o != nil && !IsNil(o.CardBrand) {
+		return true
+	}
+
+	return false
+}
+
+// SetCardBrand gets a reference to the given string and assigns it to the CardBrand field.
+func (o *EcrPayment) SetCardBrand(v string) {
+	o.CardBrand = &v
+}
+
+// GetPaymentReference returns the PaymentReference field value if set, zero value otherwise.
+func (o *EcrPayment) GetPaymentReference() string {
+	if o == nil || IsNil(o.PaymentReference) {
+		var ret string
+		return ret
+	}
+	return *o.PaymentReference
+}
+
+// GetPaymentReferenceOk returns a tuple with the PaymentReference field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetPaymentReferenceOk() (*string, bool) {
+	if o == nil || IsNil(o.PaymentReference) {
+		return nil, false
+	}
+	return o.PaymentReference, true
+}
+
+// HasPaymentReference returns a boolean if a field has been set.
+func (o *EcrPayment) HasPaymentReference() bool {
+	if o != nil && !IsNil(o.PaymentReference) {
+		return true
+	}
+
+	return false
+}
+
+// SetPaymentReference gets a reference to the given string and assigns it to the PaymentReference field.
+func (o *EcrPayment) SetPaymentReference(v string) {
+	o.PaymentReference = &v
+}
+
+// GetPrintSlip returns the PrintSlip field value if set, zero value otherwise.
+func (o *EcrPayment) GetPrintSlip() bool {
+	if o == nil || IsNil(o.PrintSlip) {
+		var ret bool
+		return ret
+	}
+	return *o.PrintSlip
+}
+
+// GetPrintSlipOk returns a tuple with the PrintSlip field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetPrintSlipOk() (*bool, bool) {
+	if o == nil || IsNil(o.PrintSlip) {
+		return nil, false
+	}
+	return o.PrintSlip, true
+}
+
+// HasPrintSlip returns a boolean if a field has been set.
+func (o *EcrPayment) HasPrintSlip() bool {
+	if o != nil && !IsNil(o.PrintSlip) {
+		return true
+	}
+
+	return false
+}
+
+// SetPrintSlip gets a reference to the given bool and assigns it to the PrintSlip field.
+func (o *EcrPayment) SetPrintSlip(v bool) {
+	o.PrintSlip = &v
+}
+
+// GetTerminal returns the Terminal field value if set, zero value otherwise.
+func (o *EcrPayment) GetTerminal() string {
+	if o == nil || IsNil(o.Terminal) {
+		var ret string
+		return ret
+	}
+	return *o.Terminal
+}
+
+// GetTerminalOk returns a tuple with the Terminal field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetTerminalOk() (*string, bool) {
+	if o == nil || IsNil(o.Terminal) {
+		return nil, false
+	}
+	return o.Terminal, true
+}
+
+// HasTerminal returns a boolean if a field has been set.
+func (o *EcrPayment) HasTerminal() bool {
+	if o != nil && !IsNil(o.Terminal) {
+		return true
+	}
+
+	return false
+}
+
+// SetTerminal gets a reference to the given string and assigns it to the Terminal field.
+func (o *EcrPayment) SetTerminal(v string) {
+	o.Terminal = &v
+}
+
+// GetReversalStatus returns the ReversalStatus field value if set, zero value otherwise.
+func (o *EcrPayment) GetReversalStatus() string {
+	if o == nil || IsNil(o.ReversalStatus) {
+		var ret string
+		return ret
+	}
+	return *o.ReversalStatus
+}
+
+// GetReversalStatusOk returns a tuple with the ReversalStatus field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetReversalStatusOk() (*string, bool) {
+	if o == nil || IsNil(o.ReversalStatus) {
+		return nil, false
+	}
+	return o.ReversalStatus, true
+}
+
+// HasReversalStatus returns a boolean if a field has been set.
+func (o *EcrPayment) HasReversalStatus() bool {
+	if o != nil && !IsNil(o.ReversalStatus) {
+		return true
+	}
+
+	return false
+}
+
+// SetReversalStatus gets a reference to the given string and assigns it to the ReversalStatus field.
+func (o *EcrPayment) SetReversalStatus(v string) {
+	o.ReversalStatus = &v
+}
+
+// GetShopItems returns the ShopItems field value if set, zero value otherwise.
+func (o *EcrPayment) GetShopItems() []EcrPaymentShopItemsInner {
+	if o == nil || IsNil(o.ShopItems) {
+		var ret []EcrPaymentShopItemsInner
+		return ret
+	}
+	return o.ShopItems
+}
+
+// GetShopItemsOk returns a tuple with the ShopItems field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EcrPayment) GetShopItemsOk() ([]EcrPaymentShopItemsInner, bool) {
+	if o == nil || IsNil(o.ShopItems) {
+		return nil, false
+	}
+	return o.ShopItems, true
+}
+
+// HasShopItems returns a boolean if a field has been set.
+func (o *EcrPayment) HasShopItems() bool {
+	if o != nil && !IsNil(o.ShopItems) {
+		return true
+	}
+
+	return false
+}
+
+// SetShopItems gets a reference to the given []EcrPaymentShopItemsInner and assigns it to the ShopItems field.
+func (o *EcrPayment) SetShopItems(v []EcrPaymentShopItemsInner) {
+	o.ShopItems = v
+}
+
+// GetSlip returns the Slip field value if set, zero value otherwise.
+func (o *EcrPayment) GetSlip() []string {
+	if o == nil || IsNil(o.Slip) {
+		var ret []string
 		return ret
 	}
 	return o.Slip
@@ -118,12 +522,11 @@ func (o *EcrPayment) GetSlip() interface{} {
 
 // GetSlipOk returns a tuple with the Slip field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-// NOTE: If the value is an explicit nil, `nil, true` will be returned
-func (o *EcrPayment) GetSlipOk() (*interface{}, bool) {
+func (o *EcrPayment) GetSlipOk() ([]string, bool) {
 	if o == nil || IsNil(o.Slip) {
 		return nil, false
 	}
-	return &o.Slip, true
+	return o.Slip, true
 }
 
 // HasSlip returns a boolean if a field has been set.
@@ -135,8 +538,8 @@ func (o *EcrPayment) HasSlip() bool {
 	return false
 }
 
-// SetSlip gets a reference to the given interface{} and assigns it to the Slip field.
-func (o *EcrPayment) SetSlip(v interface{}) {
+// SetSlip gets a reference to the given []string and assigns it to the Slip field.
+func (o *EcrPayment) SetSlip(v []string) {
 	o.Slip = v
 }
 
@@ -151,12 +554,48 @@ func (o EcrPayment) MarshalJSON() ([]byte, error) {
 func (o EcrPayment) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	if !IsNil(o.PaymentId) {
-		toSerialize["payment_id"] = o.PaymentId
+		toSerialize["paymentId"] = o.PaymentId
 	}
-	if !IsNil(o.PaymentStatus) {
-		toSerialize["payment_status"] = o.PaymentStatus
+	if !IsNil(o.Status) {
+		toSerialize["status"] = o.Status
 	}
-	if o.Slip != nil {
+	if !IsNil(o.Type) {
+		toSerialize["type"] = o.Type
+	}
+	if !IsNil(o.Amount) {
+		toSerialize["amount"] = o.Amount
+	}
+	if !IsNil(o.TransactionDescriptor) {
+		toSerialize["transactionDescriptor"] = o.TransactionDescriptor
+	}
+	if !IsNil(o.Currency) {
+		toSerialize["currency"] = o.Currency
+	}
+	if !IsNil(o.TipAmount) {
+		toSerialize["tipAmount"] = o.TipAmount
+	}
+	if !IsNil(o.PaymentMethod) {
+		toSerialize["paymentMethod"] = o.PaymentMethod
+	}
+	if !IsNil(o.CardBrand) {
+		toSerialize["cardBrand"] = o.CardBrand
+	}
+	if !IsNil(o.PaymentReference) {
+		toSerialize["paymentReference"] = o.PaymentReference
+	}
+	if !IsNil(o.PrintSlip) {
+		toSerialize["printSlip"] = o.PrintSlip
+	}
+	if !IsNil(o.Terminal) {
+		toSerialize["terminal"] = o.Terminal
+	}
+	if !IsNil(o.ReversalStatus) {
+		toSerialize["reversalStatus"] = o.ReversalStatus
+	}
+	if !IsNil(o.ShopItems) {
+		toSerialize["shopItems"] = o.ShopItems
+	}
+	if !IsNil(o.Slip) {
 		toSerialize["slip"] = o.Slip
 	}
 	return toSerialize, nil

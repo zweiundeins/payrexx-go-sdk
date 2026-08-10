@@ -6,11 +6,12 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Amount** | **int32** | in cents | 
 **Currency** | **string** |  | 
-**PaymentMethod** | Pointer to **string** |  | [optional] 
+**TransactionDescriptor** | Pointer to **string** | Optional free-text descriptor for the transaction. | [optional] 
+**PaymentMethod** | Pointer to **string** | Optional. Restricts the transaction to a specific payment method (e.g. \&quot;twint\&quot;). NexGo only — ignored on Newland terminals. Twint is not yet available on Newland terminals. | [optional] 
 **PaymentReference** | Pointer to **string** |  | [optional] 
 **PrintSlip** | Pointer to **bool** |  | [optional] 
-**TipAmount** | Pointer to **string** | added to the total | [optional] 
-**ShopItems** | Pointer to [**EcrPaymentInitiateRequestShopItems**](EcrPaymentInitiateRequestShopItems.md) |  | [optional] 
+**TipAmount** | Pointer to **int32** | In cents, added to the total. | [optional] 
+**ShopItems** | Pointer to [**[]EcrPaymentInitiateRequestShopItemsInner**](EcrPaymentInitiateRequestShopItemsInner.md) |  | [optional] 
 
 ## Methods
 
@@ -70,6 +71,31 @@ and a boolean to check if the value has been set.
 
 SetCurrency sets Currency field to given value.
 
+
+### GetTransactionDescriptor
+
+`func (o *EcrPaymentInitiateRequest) GetTransactionDescriptor() string`
+
+GetTransactionDescriptor returns the TransactionDescriptor field if non-nil, zero value otherwise.
+
+### GetTransactionDescriptorOk
+
+`func (o *EcrPaymentInitiateRequest) GetTransactionDescriptorOk() (*string, bool)`
+
+GetTransactionDescriptorOk returns a tuple with the TransactionDescriptor field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetTransactionDescriptor
+
+`func (o *EcrPaymentInitiateRequest) SetTransactionDescriptor(v string)`
+
+SetTransactionDescriptor sets TransactionDescriptor field to given value.
+
+### HasTransactionDescriptor
+
+`func (o *EcrPaymentInitiateRequest) HasTransactionDescriptor() bool`
+
+HasTransactionDescriptor returns a boolean if a field has been set.
 
 ### GetPaymentMethod
 
@@ -148,20 +174,20 @@ HasPrintSlip returns a boolean if a field has been set.
 
 ### GetTipAmount
 
-`func (o *EcrPaymentInitiateRequest) GetTipAmount() string`
+`func (o *EcrPaymentInitiateRequest) GetTipAmount() int32`
 
 GetTipAmount returns the TipAmount field if non-nil, zero value otherwise.
 
 ### GetTipAmountOk
 
-`func (o *EcrPaymentInitiateRequest) GetTipAmountOk() (*string, bool)`
+`func (o *EcrPaymentInitiateRequest) GetTipAmountOk() (*int32, bool)`
 
 GetTipAmountOk returns a tuple with the TipAmount field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetTipAmount
 
-`func (o *EcrPaymentInitiateRequest) SetTipAmount(v string)`
+`func (o *EcrPaymentInitiateRequest) SetTipAmount(v int32)`
 
 SetTipAmount sets TipAmount field to given value.
 
@@ -173,20 +199,20 @@ HasTipAmount returns a boolean if a field has been set.
 
 ### GetShopItems
 
-`func (o *EcrPaymentInitiateRequest) GetShopItems() EcrPaymentInitiateRequestShopItems`
+`func (o *EcrPaymentInitiateRequest) GetShopItems() []EcrPaymentInitiateRequestShopItemsInner`
 
 GetShopItems returns the ShopItems field if non-nil, zero value otherwise.
 
 ### GetShopItemsOk
 
-`func (o *EcrPaymentInitiateRequest) GetShopItemsOk() (*EcrPaymentInitiateRequestShopItems, bool)`
+`func (o *EcrPaymentInitiateRequest) GetShopItemsOk() (*[]EcrPaymentInitiateRequestShopItemsInner, bool)`
 
 GetShopItemsOk returns a tuple with the ShopItems field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetShopItems
 
-`func (o *EcrPaymentInitiateRequest) SetShopItems(v EcrPaymentInitiateRequestShopItems)`
+`func (o *EcrPaymentInitiateRequest) SetShopItems(v []EcrPaymentInitiateRequestShopItemsInner)`
 
 SetShopItems sets ShopItems field to given value.
 

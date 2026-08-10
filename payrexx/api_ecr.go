@@ -22,6 +22,120 @@ import (
 // EcrAPIService EcrAPI service
 type EcrAPIService service
 
+type ApiEcrConfigRetrieveRequest struct {
+	ctx          context.Context
+	ApiService   *EcrAPIService
+	serialNumber string
+}
+
+func (r ApiEcrConfigRetrieveRequest) Execute() (*EcrConfigRetrieve200Response, *http.Response, error) {
+	return r.ApiService.EcrConfigRetrieveExecute(r)
+}
+
+/*
+EcrConfigRetrieve Method for EcrConfigRetrieve
+
+Retrieves the terminal's configuration (currency, tipping, receipt printing, accepted payment methods). Currently returns an empty/default response for both NexGo and Newland terminals — use `paymentMethods` for NexGo in the meantime.
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param serialNumber
+	@return ApiEcrConfigRetrieveRequest
+*/
+func (a *EcrAPIService) EcrConfigRetrieve(ctx context.Context, serialNumber string) ApiEcrConfigRetrieveRequest {
+	return ApiEcrConfigRetrieveRequest{
+		ApiService:   a,
+		ctx:          ctx,
+		serialNumber: serialNumber,
+	}
+}
+
+// Execute executes the request
+//
+//	@return EcrConfigRetrieve200Response
+func (a *EcrAPIService) EcrConfigRetrieveExecute(r ApiEcrConfigRetrieveRequest) (*EcrConfigRetrieve200Response, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *EcrConfigRetrieve200Response
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EcrAPIService.EcrConfigRetrieve")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/ecr/{serialNumber}/config"
+	localVarPath = strings.Replace(localVarPath, "{"+"serialNumber"+"}", url.PathEscape(parameterValueToString(r.serialNumber, "serialNumber")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiEcrPairRequest struct {
 	ctx            context.Context
 	ApiService     *EcrAPIService
@@ -504,6 +618,8 @@ func (r ApiEcrPaymentMethodListRequest) Execute() (*EcrPaymentMethodList200Respo
 /*
 EcrPaymentMethodList Method for EcrPaymentMethodList
 
+NexGo: returns the terminal's available payment methods. Newland: always returns an empty list — not yet supported.
+
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
 	@param serialNumber
 	@return ApiEcrPaymentMethodListRequest
@@ -577,6 +693,154 @@ func (a *EcrAPIService) EcrPaymentMethodListExecute(r ApiEcrPaymentMethodListReq
 		newErr := &GenericOpenAPIError{
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiEcrPaymentRefundRequest struct {
+	ctx                     context.Context
+	ApiService              *EcrAPIService
+	serialNumber            string
+	paymentId               string
+	ecrPaymentRefundRequest *EcrPaymentRefundRequest
+}
+
+func (r ApiEcrPaymentRefundRequest) EcrPaymentRefundRequest(ecrPaymentRefundRequest EcrPaymentRefundRequest) ApiEcrPaymentRefundRequest {
+	r.ecrPaymentRefundRequest = &ecrPaymentRefundRequest
+	return r
+}
+
+func (r ApiEcrPaymentRefundRequest) Execute() (*EcrPaymentInitiate200Response, *http.Response, error) {
+	return r.ApiService.EcrPaymentRefundExecute(r)
+}
+
+/*
+EcrPaymentRefund
+
+Refunds a completed payment. Newland: routed through the same reversal mechanism as `void`, so only a full refund is possible; a partial `amount` is rejected with a 400. Not currently available for NexGo terminals (responds 501 Not Implemented).
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param serialNumber
+	@param paymentId
+	@return ApiEcrPaymentRefundRequest
+*/
+func (a *EcrAPIService) EcrPaymentRefund(ctx context.Context, serialNumber string, paymentId string) ApiEcrPaymentRefundRequest {
+	return ApiEcrPaymentRefundRequest{
+		ApiService:   a,
+		ctx:          ctx,
+		serialNumber: serialNumber,
+		paymentId:    paymentId,
+	}
+}
+
+// Execute executes the request
+//
+//	@return EcrPaymentInitiate200Response
+func (a *EcrAPIService) EcrPaymentRefundExecute(r ApiEcrPaymentRefundRequest) (*EcrPaymentInitiate200Response, *http.Response, error) {
+	var (
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *EcrPaymentInitiate200Response
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EcrAPIService.EcrPaymentRefund")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/ecr/{serialNumber}/payment/{paymentId}/refund"
+	localVarPath = strings.Replace(localVarPath, "{"+"serialNumber"+"}", url.PathEscape(parameterValueToString(r.serialNumber, "serialNumber")), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"paymentId"+"}", url.PathEscape(parameterValueToString(r.paymentId, "paymentId")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.ecrPaymentRefundRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 501 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

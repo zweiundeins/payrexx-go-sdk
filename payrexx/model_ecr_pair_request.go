@@ -11,9 +11,7 @@ API version: 1.16
 package payrexx
 
 import (
-	"bytes"
 	"encoding/json"
-	"fmt"
 )
 
 // checks if the EcrPairRequest type satisfies the MappedNullable interface at compile time
@@ -21,20 +19,18 @@ var _ MappedNullable = &EcrPairRequest{}
 
 // EcrPairRequest struct for EcrPairRequest
 type EcrPairRequest struct {
-	PairingCode string `json:"pairingCode"`
-	//
+	// One-time pairing code shown on the terminal screen. Required for NexGo devices only — ignored for Newland devices, which authorize automatically using the merchant's stored credentials.
+	PairingCode *string `json:"pairingCode,omitempty"`
+	// NexGo devices only — ignored for Newland devices.
 	CashierName *string `json:"cashierName,omitempty"`
 }
-
-type _EcrPairRequest EcrPairRequest
 
 // NewEcrPairRequest instantiates a new EcrPairRequest object
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewEcrPairRequest(pairingCode string) *EcrPairRequest {
+func NewEcrPairRequest() *EcrPairRequest {
 	this := EcrPairRequest{}
-	this.PairingCode = pairingCode
 	var cashierName string = "terminalName"
 	this.CashierName = &cashierName
 	return &this
@@ -50,28 +46,36 @@ func NewEcrPairRequestWithDefaults() *EcrPairRequest {
 	return &this
 }
 
-// GetPairingCode returns the PairingCode field value
+// GetPairingCode returns the PairingCode field value if set, zero value otherwise.
 func (o *EcrPairRequest) GetPairingCode() string {
-	if o == nil {
+	if o == nil || IsNil(o.PairingCode) {
 		var ret string
 		return ret
 	}
-
-	return o.PairingCode
+	return *o.PairingCode
 }
 
-// GetPairingCodeOk returns a tuple with the PairingCode field value
+// GetPairingCodeOk returns a tuple with the PairingCode field value if set, nil otherwise
 // and a boolean to check if the value has been set.
 func (o *EcrPairRequest) GetPairingCodeOk() (*string, bool) {
-	if o == nil {
+	if o == nil || IsNil(o.PairingCode) {
 		return nil, false
 	}
-	return &o.PairingCode, true
+	return o.PairingCode, true
 }
 
-// SetPairingCode sets field value
+// HasPairingCode returns a boolean if a field has been set.
+func (o *EcrPairRequest) HasPairingCode() bool {
+	if o != nil && !IsNil(o.PairingCode) {
+		return true
+	}
+
+	return false
+}
+
+// SetPairingCode gets a reference to the given string and assigns it to the PairingCode field.
 func (o *EcrPairRequest) SetPairingCode(v string) {
-	o.PairingCode = v
+	o.PairingCode = &v
 }
 
 // GetCashierName returns the CashierName field value if set, zero value otherwise.
@@ -116,48 +120,13 @@ func (o EcrPairRequest) MarshalJSON() ([]byte, error) {
 
 func (o EcrPairRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
-	toSerialize["pairingCode"] = o.PairingCode
+	if !IsNil(o.PairingCode) {
+		toSerialize["pairingCode"] = o.PairingCode
+	}
 	if !IsNil(o.CashierName) {
 		toSerialize["cashierName"] = o.CashierName
 	}
 	return toSerialize, nil
-}
-
-func (o *EcrPairRequest) UnmarshalJSON(data []byte) (err error) {
-	// This validates that all required properties are included in the JSON object
-	// by unmarshalling the object into a generic map with string keys and checking
-	// that every required field exists as a key in the generic map.
-	requiredProperties := []string{
-		"pairingCode",
-	}
-
-	allProperties := make(map[string]interface{})
-
-	err = json.Unmarshal(data, &allProperties)
-
-	if err != nil {
-		return err
-	}
-
-	for _, requiredProperty := range requiredProperties {
-		if _, exists := allProperties[requiredProperty]; !exists {
-			return fmt.Errorf("no value given for required property %v", requiredProperty)
-		}
-	}
-
-	varEcrPairRequest := _EcrPairRequest{}
-
-	decoder := json.NewDecoder(bytes.NewReader(data))
-	decoder.DisallowUnknownFields()
-	err = decoder.Decode(&varEcrPairRequest)
-
-	if err != nil {
-		return err
-	}
-
-	*o = EcrPairRequest(varEcrPairRequest)
-
-	return err
 }
 
 type NullableEcrPairRequest struct {

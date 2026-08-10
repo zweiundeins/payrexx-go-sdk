@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Status** | **string** |  | 
-**Data** | Pointer to **[]string** |  | [optional] 
+**Data** | Pointer to [**EcrPairing**](EcrPairing.md) |  | [optional] 
 
 ## Methods
 
@@ -48,20 +48,20 @@ SetStatus sets Status field to given value.
 
 ### GetData
 
-`func (o *EcrPair200Response) GetData() []string`
+`func (o *EcrPair200Response) GetData() EcrPairing`
 
 GetData returns the Data field if non-nil, zero value otherwise.
 
 ### GetDataOk
 
-`func (o *EcrPair200Response) GetDataOk() (*[]string, bool)`
+`func (o *EcrPair200Response) GetDataOk() (*EcrPairing, bool)`
 
 GetDataOk returns a tuple with the Data field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetData
 
-`func (o *EcrPair200Response) SetData(v []string)`
+`func (o *EcrPair200Response) SetData(v EcrPairing)`
 
 SetData sets Data field to given value.
 

@@ -28,6 +28,8 @@ docs/BillList200ResponseMetaParent.md
 docs/BillRetrieve200Response.md
 docs/BillUpdateRequest.md
 docs/EcrAPI.md
+docs/EcrConfig.md
+docs/EcrConfigRetrieve200Response.md
 docs/EcrPair200Response.md
 docs/EcrPairRequest.md
 docs/EcrPairing.md
@@ -36,10 +38,12 @@ docs/EcrPairingRetrieve200Response.md
 docs/EcrPayment.md
 docs/EcrPaymentInitiate200Response.md
 docs/EcrPaymentInitiateRequest.md
-docs/EcrPaymentInitiateRequestShopItems.md
+docs/EcrPaymentInitiateRequestShopItemsInner.md
 docs/EcrPaymentMethod.md
 docs/EcrPaymentMethodList200Response.md
+docs/EcrPaymentRefundRequest.md
 docs/EcrPaymentRetrieve200Response.md
+docs/EcrPaymentShopItemsInner.md
 docs/EcrUnpair200Response.md
 docs/Error.md
 docs/ErrorError.md
@@ -121,6 +125,8 @@ model_bill_list_200_response_meta.go
 model_bill_list_200_response_meta_parent.go
 model_bill_retrieve_200_response.go
 model_bill_update_request.go
+model_ecr_config.go
+model_ecr_config_retrieve_200_response.go
 model_ecr_pair_200_response.go
 model_ecr_pair_request.go
 model_ecr_pairing.go
@@ -129,10 +135,12 @@ model_ecr_pairing_retrieve_200_response.go
 model_ecr_payment.go
 model_ecr_payment_initiate_200_response.go
 model_ecr_payment_initiate_request.go
-model_ecr_payment_initiate_request_shop_items.go
+model_ecr_payment_initiate_request_shop_items_inner.go
 model_ecr_payment_method.go
 model_ecr_payment_method_list_200_response.go
+model_ecr_payment_refund_request.go
 model_ecr_payment_retrieve_200_response.go
+model_ecr_payment_shop_items_inner.go
 model_ecr_unpair_200_response.go
 model_error.go
 model_error_error.go

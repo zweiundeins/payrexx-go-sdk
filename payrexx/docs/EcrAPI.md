@@ -4,15 +4,87 @@ All URIs are relative to *https://api.payrexx.com/v1.16*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**EcrConfigRetrieve**](EcrAPI.md#EcrConfigRetrieve) | **Get** /ecr/{serialNumber}/config | 
 [**EcrPair**](EcrAPI.md#EcrPair) | **Post** /ecr/{serialNumber}/pair | 
 [**EcrPairingRetrieve**](EcrAPI.md#EcrPairingRetrieve) | **Get** /ecr/{serialNumber}/pair | 
 [**EcrPaymentCancel**](EcrAPI.md#EcrPaymentCancel) | **Post** /ecr/{serialNumber}/payment/{paymentId}/cancel | 
 [**EcrPaymentInitiate**](EcrAPI.md#EcrPaymentInitiate) | **Post** /ecr/{serialNumber}/payment | 
 [**EcrPaymentMethodList**](EcrAPI.md#EcrPaymentMethodList) | **Get** /ecr/{serialNumber}/paymentMethods | 
+[**EcrPaymentRefund**](EcrAPI.md#EcrPaymentRefund) | **Post** /ecr/{serialNumber}/payment/{paymentId}/refund | 
 [**EcrPaymentRetrieve**](EcrAPI.md#EcrPaymentRetrieve) | **Get** /ecr/{serialNumber}/payment/{paymentId} | 
 [**EcrPaymentVoid**](EcrAPI.md#EcrPaymentVoid) | **Post** /ecr/{serialNumber}/payment/{paymentId}/void | 
 [**EcrUnpair**](EcrAPI.md#EcrUnpair) | **Delete** /ecr/{serialNumber}/pair | 
 
+
+
+## EcrConfigRetrieve
+
+> EcrConfigRetrieve200Response EcrConfigRetrieve(ctx, serialNumber).Execute()
+
+
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	serialNumber := "serialNumber_example" // string | 
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.EcrAPI.EcrConfigRetrieve(context.Background(), serialNumber).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EcrAPI.EcrConfigRetrieve``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `EcrConfigRetrieve`: EcrConfigRetrieve200Response
+	fmt.Fprintf(os.Stdout, "Response from `EcrAPI.EcrConfigRetrieve`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**serialNumber** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiEcrConfigRetrieveRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+### Return type
+
+[**EcrConfigRetrieve200Response**](EcrConfigRetrieve200Response.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## EcrPair
@@ -37,7 +109,7 @@ import (
 
 func main() {
 	serialNumber := "serialNumber_example" // string | 
-	ecrPairRequest := *openapiclient.NewEcrPairRequest("PairingCode_example") // EcrPairRequest |  (optional)
+	ecrPairRequest := *openapiclient.NewEcrPairRequest() // EcrPairRequest |  (optional)
 
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
@@ -365,6 +437,81 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## EcrPaymentRefund
+
+> EcrPaymentInitiate200Response EcrPaymentRefund(ctx, serialNumber, paymentId).EcrPaymentRefundRequest(ecrPaymentRefundRequest).Execute()
+
+
+
+
+
+### Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"os"
+	openapiclient "github.com/GIT_USER_ID/GIT_REPO_ID"
+)
+
+func main() {
+	serialNumber := "serialNumber_example" // string | 
+	paymentId := "paymentId_example" // string | 
+	ecrPaymentRefundRequest := *openapiclient.NewEcrPaymentRefundRequest() // EcrPaymentRefundRequest |  (optional)
+
+	configuration := openapiclient.NewConfiguration()
+	apiClient := openapiclient.NewAPIClient(configuration)
+	resp, r, err := apiClient.EcrAPI.EcrPaymentRefund(context.Background(), serialNumber, paymentId).EcrPaymentRefundRequest(ecrPaymentRefundRequest).Execute()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error when calling `EcrAPI.EcrPaymentRefund``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+	}
+	// response from `EcrPaymentRefund`: EcrPaymentInitiate200Response
+	fmt.Fprintf(os.Stdout, "Response from `EcrAPI.EcrPaymentRefund`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**serialNumber** | **string** |  | 
+**paymentId** | **string** |  | 
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiEcrPaymentRefundRequest struct via the builder pattern
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+
+
+ **ecrPaymentRefundRequest** | [**EcrPaymentRefundRequest**](EcrPaymentRefundRequest.md) |  | 
+
+### Return type
+
+[**EcrPaymentInitiate200Response**](EcrPaymentInitiate200Response.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: application/json
 - **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)

@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **PairingStatus** | Pointer to **string** |  | [optional] 
-**CashierName** | Pointer to **string** |  | [optional] 
+**CashierName** | Pointer to **string** | NexGo only — present once a Naka pairing exists. | [optional] 
 **Configuration** | Pointer to [**EcrPairingConfiguration**](EcrPairingConfiguration.md) |  | [optional] 
 
 ## Methods

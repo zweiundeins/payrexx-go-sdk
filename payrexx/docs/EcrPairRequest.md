@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**PairingCode** | **string** |  | 
-**CashierName** | Pointer to **string** |  | [optional] [default to "terminalName"]
+**PairingCode** | Pointer to **string** | One-time pairing code shown on the terminal screen. Required for NexGo devices only — ignored for Newland devices, which authorize automatically using the merchant&#39;s stored credentials. | [optional] 
+**CashierName** | Pointer to **string** | NexGo devices only — ignored for Newland devices. | [optional] [default to "terminalName"]
 
 ## Methods
 
 ### NewEcrPairRequest
 
-`func NewEcrPairRequest(pairingCode string, ) *EcrPairRequest`
+`func NewEcrPairRequest() *EcrPairRequest`
 
 NewEcrPairRequest instantiates a new EcrPairRequest object
 This constructor will assign default values to properties that have it defined,
@@ -45,6 +45,11 @@ and a boolean to check if the value has been set.
 
 SetPairingCode sets PairingCode field to given value.
 
+### HasPairingCode
+
+`func (o *EcrPairRequest) HasPairingCode() bool`
+
+HasPairingCode returns a boolean if a field has been set.
 
 ### GetCashierName
 
