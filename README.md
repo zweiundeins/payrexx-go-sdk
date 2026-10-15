@@ -336,3 +336,7 @@ generated client is covered by the same terms as the hand-written `auth.go`,
 `webhook.go` and `scripts/build_spec.py`. The assembled `openapi.json` carries
 field descriptions taken from Payrexx's public documentation, which remain
 Payrexx's own. This is an independent client, not an official Payrexx product.
+
+## Maintainer
+
+Maintained by [zwei und eins gmbh](https://zweiundeins.gmbh), Aarberg, Switzerland.
